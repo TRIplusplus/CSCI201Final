@@ -1,0 +1,78 @@
+@CHARSET "UTF-8";
+
+body {
+	margin: 0px;
+}
+
+#login-page {
+    font-family: 'PT Sans', sans-serif;
+    line-height: 20px;
+/*     background-color: white;  */
+    margin-left:150px; 
+}
+
+#navbar {
+	top: 0px;
+	width: 100%;
+	text-align: center;
+	height: 75px;
+	border-bottom: 1px solid black;
+}
+
+#navbar-logo {
+	height: 55px;
+	position: relative;
+	float: left;
+	padding: 10px;
+	border-right: 1px solid black;
+}
+
+.wrapper h1 {
+    font-size: 500%; 
+    font-weight: bold;
+    margin-left: 150px; 
+    
+}
+
+.wrapper h3 {
+	margin-left: 270px; 
+}
+
+.wrapper h4 {
+	margin-left: 250px; 
+}
+
+#buttons {
+	margin-left: 230px; 
+}
+
+input[type=submit] {
+    padding:5px 15px; 
+    background:white; 
+   	border-style: solid;
+    width: 200px;
+    text-color: yellow; 
+    font-family: 'Montserrat', sans-serif;
+}
+
+input[type=button] {
+    padding:5px 15px; 
+    background:white; 
+   	border-style: solid;
+    width: 200px;
+    text-color: yellow; 
+    font-family: 'Montserrat', sans-serif;
+}
+
+input[type=submit]:hover {
+    background-color: #dfe5dc; 
+}
+
+input[type=button]:hover {
+    background-color: #dfe5dc; 
+}
+
+#loginForm {
+	text-align: center; 
+	float: left;
+}
