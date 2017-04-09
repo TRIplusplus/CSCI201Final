@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/HomePage.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   </head>
-  <body id="login-page">
+  <body>
     <div class="wrapper">
     	</br>
     	</br>
@@ -19,15 +19,55 @@
 		<image style="float:right" title = "View Feed" src="Logo.png"></image>
 		<h4 style="margin-left: 285px;">Lender Login</h4>
 		<div id = 'buttons'>
-			<form id="loginForm" name="inputForm" method="GET" action="LoginServlet?user=lender">
+			<form name="inputForm" method="GET" onsubmit="return sendErrorMessage()">
 				Username</br>
 				<input type ="text" name="username"/></br>
 				Password</br>
 				<input type ="password" name="password"/></br></br>
 				<input type ="submit" name="login" value="LOG IN" /></br></br>
-				<input type ="button" name="signup" value="SIGN UP" onclick="location.href='${pageContext.request.contextPath}/SignUp.jsp'"/></br></br></br>
 			</form>
+			</br><div id ="error"></div>
 		</div>
     </div>
+    <script>
+		function sendErrorMessage() {
+
+			var username = ""; 
+			var username = document.inputForm.username.value;
+			
+			var password = "";
+ 			var password = document.inputForm.password.value;
+	
+			
+			var errorMessage = ""; 
+
+			if (username==""|| password ==""){
+				errorMessage = "There is a missing field. Please input information into all required fields"; 
+			} 
+  			else {
+ 				$.ajax({
+ 	 				type: 'POST', 
+ 	 				url: "${pageContext.request.contextPath}/LoginServlet", 
+ 	 				xhrField: {
+ 	 					withCredential: true
+ 	 				},
+ 	 				data: {
+ 	 					'username': username, 'password': password
+ 	 				}, 
+ 	 				success: function(msg){
+ 	 					if (msg.match("There is a missing field. Please input information into all required fields") || msg.match("Username does not exist") || msg.match("Username and password do not match")){
+ 	 	 					$('#error').text(msg);
+ 	 					} else {
+ 	 						var successUrl = "HomePage.jsp";
+ 	 					    window.location.href = successUrl;
+ 	 					}
+ 	 				},
+ 				}); 
+ 			}
+			
+			document.getElementById("error").innerHTML = errorMessage;
+ 			return false;  
+		}
+	</script>
   </body>
 </html>
