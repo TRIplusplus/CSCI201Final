@@ -25,7 +25,11 @@
 				Password</br>
 				<input type ="text" name="password"/></br>
 				Email</br>
-				<input type ="text" name="email"/></br></br>
+				<input type ="text" name="email"/></br>
+				I will be a</br>
+				<input type="radio" name="renter">Renter
+				<input type="radio" name="lender">Lender
+				<input type="radio" name="both">Both</br></br>
 				<input type ="submit" name="login" value="SIGN UP" />
 			</form>
 		</div>
