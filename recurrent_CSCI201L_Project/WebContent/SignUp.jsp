@@ -23,7 +23,7 @@
 				Username</br>
 				<input type ="text" name="username"/></br>
 				Password</br>
-				<input type ="text" name="password"/></br>
+				<input type ="password" name="password"/></br>
 				Email</br>
 				<input type ="text" name="email"/></br>
 				I will be a</br>
