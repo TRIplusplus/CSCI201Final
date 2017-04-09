@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/HomePage.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   </head>
-  <body>
+  <body id="login-page">
     <div class="wrapper">
     	</br>
     	</br>
@@ -17,7 +17,7 @@
     	</br></br>
 		<h1>RecuRRent</h1>
 		<image style="float:right" title = "View Feed" src="Logo.png"></image>
-		<h4 style="margin-left: 295px;">Sign Up</h4>
+		<h4 style="margin-left: 300px;">Sign Up</h4>
 		<div id = 'buttons'>
 			<form id="loginForm" name="inputForm" method="GET" action="LoginServlet?user=lender">
 				Username</br>

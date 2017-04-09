@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/HomePage.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   </head>
-  <body>
+  <body id="login-page">
     <div class="wrapper">
     	</br>
     	</br>
@@ -22,8 +22,8 @@
 			<form name="inputForm" method="GET" onsubmit="return sendErrorMessage()">
 				<input type ="button" name="login" value="LENDER LOGIN" onclick="location.href='${pageContext.request.contextPath}/LenderLogin.jsp'"/></br></br></br>
 				<input type ="button" name="login" value="RENTER LOGIN" onclick="location.href='${pageContext.request.contextPath}/RenterLogin.jsp'"/></br></br></br>
-				<input type ="submit" name="login" value="SIGN UP" /></br></br></br>
-				<input type ="submit" name="login" value="DISCOVER" />
+				<input type ="button" name="signup" value="SIGN UP" onclick="location.href='${pageContext.request.contextPath}/SignUp.jsp'"/></br></br></br>
+				<input type ="submit" name="discover" value="DISCOVER" />
 			</form>
 		</div>
     </div>

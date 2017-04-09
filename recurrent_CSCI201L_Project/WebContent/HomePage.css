@@ -1,10 +1,30 @@
 @CHARSET "UTF-8";
 
 body {
+	margin: 0px;
+}
+
+#login-page {
     font-family: 'PT Sans', sans-serif;
     line-height: 20px;
 /*     background-color: white;  */
     margin-left:150px; 
+}
+
+#navbar {
+	top: 0px;
+	width: 100%;
+	text-align: center;
+	height: 75px;
+	border-bottom: 1px solid black;
+}
+
+#navbar-logo {
+	height: 55px;
+	position: relative;
+	float: left;
+	padding: 10px;
+	border-right: 1px solid black;
 }
 
 .wrapper h1 {
