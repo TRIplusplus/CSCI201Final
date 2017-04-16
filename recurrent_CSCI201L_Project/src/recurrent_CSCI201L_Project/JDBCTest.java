@@ -60,9 +60,9 @@ public class JDBCTest {
 		return conn;
 	}
 
-	public void addRenter(String username, String password, String email) {
+	public void addRenter(String username, String password, String image, String email) {
 		System.out.println("got here");
-		String sql = "INSERT INTO renters(username, password1, email) VALUES(?,?,?)";
+		String sql = "INSERT INTO renters(username, password1, image, email) VALUES(?,?,?,?)";
 
 		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, username);
@@ -74,8 +74,8 @@ public class JDBCTest {
 		}
 	}
 
-	public void addLender(String username, String password, String email) {
-		String sql = "INSERT INTO lenders(username, password1, email) VALUES(?,?,?)";
+	public void addLender(String username, String password, String image, String email) {
+		String sql = "INSERT INTO lenders(username, password1, image, email) VALUES(?,?,?,?)";
 
 		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, username);
@@ -157,5 +157,28 @@ public class JDBCTest {
 		} else {
 			return true;
 		}
+	}
+	
+	//getters
+	public User getUser(String username, String type) {
+		try {
+			String sql = "SELECT username FROM " + type + " WHERE username = '" + username + "'";
+	
+			Connection conn = JDBCTest.connect();
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			
+			while (rs.next()) {
+				username = rs.getString(1);
+				String password = rs.getString(2);
+				String image = rs.getString(3);
+				String email = rs.getString(4);
+				if (type.equals("renter")) return new Renter(username, password, image, email);
+				else return new Lender(username, password, image, email); 
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
