@@ -2,11 +2,13 @@ package recurrent_CSCI201L_Project;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 //import org.json.*;
 
@@ -204,6 +206,158 @@ public class JDBCTest {
 			e.printStackTrace();
 		}
 		System.out.println("user not found");
+		return null;
+	}
+	
+	public ArrayList<Item> getItemsForLender(String username) {
+		try {
+			String sql = "SELECT * FROM items WHERE lender = '" + username + "'";
+	
+			Connection conn = JDBCTest.connect();
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			
+			ArrayList<Item> items = new ArrayList<Item>();
+			
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String lender = rs.getString(2);
+				String renter = rs.getString(3);
+				String title = rs.getString(4);
+				String image = rs.getString(5);
+				Date startDate = rs.getDate(6);
+				Date endDate = rs.getDate(7);
+				String description = rs.getString(8);
+				Double price = rs.getDouble(9);
+				Double xcoord = rs.getDouble(10);
+				Double ycoord = rs.getDouble(11);
+				
+				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
+				items.add(item);
+			}
+			
+			return items;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public ArrayList<Item> getItemsForSearch(String search) {
+		try {
+			String sql = "SELECT * FROM items";
+	
+			Connection conn = JDBCTest.connect();
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			
+			ArrayList<Item> items = new ArrayList<Item>();
+			
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String lender = rs.getString(2);
+				String renter = rs.getString(3);
+				String title = rs.getString(4);
+				String image = rs.getString(5);
+				Date startDate = rs.getDate(6);
+				Date endDate = rs.getDate(7);
+				String description = rs.getString(8);
+				Double price = rs.getDouble(9);
+				Double xcoord = rs.getDouble(10);
+				Double ycoord = rs.getDouble(11);
+				
+				if (description.contains((CharSequence)search) || title.contains((CharSequence)search)) {
+					Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
+					items.add(item);
+				}
+			}
+			
+			return items;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public ArrayList<Item> getItemsNearLocation(double x, double y) {
+		try {
+			int acceptableDistance = 50;
+			String sql = "SELECT * FROM items";
+	
+			Connection conn = JDBCTest.connect();
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			
+			ArrayList<Item> items = new ArrayList<Item>();
+			
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String lender = rs.getString(2);
+				String renter = rs.getString(3);
+				String title = rs.getString(4);
+				String image = rs.getString(5);
+				Date startDate = rs.getDate(6);
+				Date endDate = rs.getDate(7);
+				String description = rs.getString(8);
+				Double price = rs.getDouble(9);
+				Double xcoord = rs.getDouble(10);
+				Double ycoord = rs.getDouble(11);
+				
+				if (Math.sqrt((xcoord-x)*(xcoord-x) + (ycoord-y)*(ycoord-y)) < acceptableDistance) {
+					Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
+					items.add(item);
+				}
+			}
+			
+			return items;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public ArrayList<Item> getItemsBySearchAndLocation(String search, double x, double y) {
+		ArrayList<Item> searchList = getItemsForSearch(search);
+		ArrayList<Item> locationList = getItemsNearLocation(x, y);
+		ArrayList<Item> intersection = new ArrayList<Item>();
+		
+		for (Item item : searchList) {
+			for (Item item2: locationList) {
+				if (item.getID() == item2.getID()) intersection.add(item);
+			}
+		}
+		return intersection;
+	}
+	
+	public Item getItemByID(int ID) {
+		try {
+			String sql = "SELECT * FROM items WHERE id = " + ID;
+	
+			Connection conn = JDBCTest.connect();
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			
+			ArrayList<Item> items = new ArrayList<Item>();
+			
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String lender = rs.getString(2);
+				String renter = rs.getString(3);
+				String title = rs.getString(4);
+				String image = rs.getString(5);
+				Date startDate = rs.getDate(6);
+				Date endDate = rs.getDate(7);
+				String description = rs.getString(8);
+				Double price = rs.getDouble(9);
+				Double xcoord = rs.getDouble(10);
+				Double ycoord = rs.getDouble(11);
+				
+				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
+				return item;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 }

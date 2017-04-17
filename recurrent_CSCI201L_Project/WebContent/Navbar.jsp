@@ -7,16 +7,13 @@
 	<%JDBCTest jdb = (JDBCTest)request.getSession().getAttribute("jdb");
 	String userType = (String)request.getSession().getAttribute("userType");
 	String username = (String)request.getSession().getAttribute("loggedUser");
-	System.out.println(username + ":" + userType);
 	User user = jdb.getUser(username, userType);
-	System.out.println(user);
-	System.out.println(user.getImage());
 	%>
 	<%if (userType.equals("lender")) { %><a href="LenderHomePage.jsp">
 	<%} else { %><a href="RenterHomePage.jsp"><% } %>
 	<image id="navbar-logo" title = "View Feed" src="Logo.png">
 	</a>
-	<a href="ProfilePage.jsp">
+	<a href="ProfilePage.jsp?user=<%=user.getUsername()%>&userType=<%=user.getUserType()%>">
 		<div style="height: 75px; border-left: 1px solid black; float: right;">
 			<image id="profile-picture" class="navbar-item" title="Profile" src="<%=user.getImage() %>" style="margin-top: 10px">
 		</div>

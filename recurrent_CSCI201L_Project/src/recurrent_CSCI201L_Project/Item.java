@@ -13,6 +13,7 @@ public class Item {
 	private double price;
 	private double xcoord;
 	private double ycoord;
+	private int id;
 	
 	public Item(String lender, String image, String title, Date startdate, Date enddate, 
 			String description, double price, double xcoord, double ycoord) {
@@ -69,5 +70,13 @@ public class Item {
 	
 	public double getY() {
 		return ycoord;
+	}
+	
+	public int getID() {
+		return id;
+	}
+	
+	public void setID(int ID) {
+		id = ID;
 	}
 }

@@ -43,10 +43,31 @@
 			</form>
 		</div>
 		<div id="lent-items" style="text-align: center">
-			<h3>Currentlty Lending Items:</h3>
-			<div id="lent-items-table">
+			<h3>Currently Lending Items:</h3>
+			<div id="lent-items-table" style="text-align: center;">
+			<%@ page import="java.util.ArrayList" %>
+			<%@ page import="recurrent_CSCI201L_Project.Item" %>
+			<%ArrayList<Item> items = jdb.getItemsForLender(username);
+			if (items == null) {
+			%>
 				You are not renting any items.<br>
 				Click the button above to lend an item.
+			<%} else {%>
+				<table style="border: 0px; width: 60%; margin-left: 17%">
+					<% for (int i=0; i<items.size(); i+=3) {%>
+						<tr>
+						<%for (int j=i; j<i+3; j++) {
+							if (j<items.size()) {%>
+							<td style="border: 0px">
+								<img src="<%=items.get(j).getImage()%>" style="max-width: 100px; max-height: 100px;"></br>
+								<%=items.get(j).getTitle()%>
+							</td>
+			<% 				}
+						}%>
+						</tr>
+			<%		}%>
+				</table>
+			<%} %>
 			</div>
 		</div>
 	</body>
