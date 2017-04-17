@@ -16,9 +16,25 @@
 				<td>Subject</td>	
 				<td>Date</td>
 			</thead>
+			<%@ page import="java.util.ArrayList" %>
+			<%@ page import="recurrent_CSCI201L_Project.Message" %>
+			<% ArrayList<Message> messages = jdb.getMessagesForUser(jdb.getLoggedUser()); 
+			if (messages == null) {%>
 			<tr>
 				<td colspan="3">You have no messages.</td>
 			</tr>
+			<% } else {
+					for (int i=0; i<messages.size(); i++) {%>
+					<% if(!messages.get(i).isRead()) {%> <strong> <% } %>
+					<tr>
+						<td><%=messages.get(i).getSender() %></td>
+						<td><%=messages.get(i).getTitle() %></td>
+						<td><%=messages.get(i).getDate().toString() %></td>
+					</tr>
+					<% if(!messages.get(i).isRead()) {%> </strong> <% } %>
+			<%		} 
+				}%>
+				
 		</table>
 </body>
 </html>

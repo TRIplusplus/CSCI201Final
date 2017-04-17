@@ -28,8 +28,10 @@ public class SendMessageServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		JDBCTest jdb = (JDBCTest)request.getSession().getAttribute("jdb");
 		String username = (String)request.getSession().getAttribute("loggedUser");
+		String receiver = request.getParameter("receiver");
 		String title = request.getParameter("title");
 		String message = request.getParameter("message");
+		jdb.sendMessage(new Message(username, receiver, title, message));
 	}
 
 	/**

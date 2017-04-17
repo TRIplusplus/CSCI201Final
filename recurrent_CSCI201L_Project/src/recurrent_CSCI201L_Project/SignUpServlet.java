@@ -21,7 +21,11 @@ public class SignUpServlet extends HttpServlet {
 
 		String errorMessage = "";
 
-		JDBCTest jdb = new JDBCTest();
+		JDBCTest jdb = (JDBCTest)request.getSession().getAttribute("jdb"); 
+		if (jdb == null) {
+			jdb = new JDBCTest();
+			request.getSession().setAttribute("jdb", jdb);
+		}
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String image = request.getParameter("image");
@@ -46,6 +50,8 @@ public class SignUpServlet extends HttpServlet {
 					Renter renter = new Renter(username, password, image, email);
 					jdb.addRenter(username, password, image, email);
 					request.getSession().setAttribute("loggedUser", username);
+					jdb.setLoggedUser(username);
+					jdb.setLoggedUserType(userType);
 				}
 			} catch (
 
@@ -63,6 +69,8 @@ public class SignUpServlet extends HttpServlet {
 					Lender lender = new Lender(username, password, image, email);
 					System.out.println("new Lender made");
 					jdb.addLender(username, password, image, email);
+					jdb.setLoggedUser(username);
+					jdb.setLoggedUserType(userType);
 					request.getSession().setAttribute("loggedUser", username);
 				}
 			} catch (

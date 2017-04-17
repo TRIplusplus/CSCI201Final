@@ -59,7 +59,7 @@
  	 					if (msg.match("There is a missing field. Please input information into all required fields") || msg.match("Username does not exist") || msg.match("Username and password do not match")){
  	 	 					$('#error').text(msg);
  	 					} else {
- 	 						var successUrl = "HomePage.jsp";
+ 	 						var successUrl = "RenterHomePage.jsp";
  	 					    window.location.href = successUrl;
  	 					}
  	 				},

@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 //import org.json.*;
@@ -19,7 +20,9 @@ public class JDBCTest {
 	private static Statement st;
 	private static PreparedStatement ps;
 	private static ResultSet rs;
-
+	String loggedUser;
+	String loggedUserType;
+	
 	public JDBCTest() throws IOException {
 
 		pc = new ParseConfig();
@@ -60,6 +63,22 @@ public class JDBCTest {
 			System.out.println("ClassNotFoundException: " + cnfe.getMessage());
 		}
 		return conn;
+	}
+	
+	public String getLoggedUser() {
+		return loggedUser;
+	}
+	
+	public void setLoggedUser(String username) {
+		this.loggedUser = username;
+	}
+	
+	public String getLoggedUserType() {
+		return loggedUserType;
+	}
+	
+	public void setLoggedUserType(String userType) {
+		this.loggedUserType = userType;
 	}
 
 	public void addRenter(String username, String password, String image, String email) {
@@ -207,6 +226,77 @@ public class JDBCTest {
 		}
 		System.out.println("user not found");
 		return null;
+	}
+	
+	public void sendMessage(Message message) {
+		String sql = "INSERT INTO messages(sender, receiver, title, message, unread, date) VALUES(?,?,?,?,?,?)";
+		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, message.getSender());
+			pstmt.setString(2, message.getReceiver());
+			pstmt.setString(3, message.getTitle());
+			pstmt.setString(4, message.getMessage());
+			pstmt.setBoolean(5, true);
+			pstmt.setDate(6, Date.valueOf(LocalDate.now()));
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+	}
+	
+	public void readMessage(int ID) {
+		try {	
+			String sql = "UPDATE messages SET unread = false WHERE id = " + ID;
+			Connection conn = JDBCTest.connect();
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public ArrayList<Message> getMessagesForUser(String username) {
+		try {
+			String sql = "SELECT * FROM messages WHERE receiver = '" + username + "'";
+	
+			Connection conn = JDBCTest.connect();
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			
+			ArrayList<Message> messages = new ArrayList<Message>();
+			
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String sender = rs.getString(2);
+				String receiver = rs.getString(3);
+				String title = rs.getString(4);
+				String text = rs.getString(5);
+				boolean read = !(rs.getBoolean(6));
+				Date date = rs.getDate(7);
+				
+				Message newMessage = new Message(sender, receiver, title, text);
+				newMessage.setDate(date);
+				if (read) newMessage.markAsRead();
+				newMessage.setID(id);
+				messages.add(newMessage);
+			}
+			
+			return messages;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public int countUnreadMessages(String username) {
+		ArrayList<Message> messages = getMessagesForUser(username);
+		int count = 0;
+		if (messages != null) {
+			for (Message message: messages) {
+				if (!message.isRead()) count++;
+			}
+		}
+		return count;
 	}
 	
 	public ArrayList<Item> getItemsForLender(String username) {

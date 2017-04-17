@@ -5,23 +5,23 @@
 	<%@ page import="recurrent_CSCI201L_Project.JDBCTest" %>
 	<%@ page import="recurrent_CSCI201L_Project.User" %>
 	<%JDBCTest jdb = (JDBCTest)request.getSession().getAttribute("jdb");
-	String userType = (String)request.getSession().getAttribute("userType");
-	String username = (String)request.getSession().getAttribute("loggedUser");
+	String userType = jdb.getLoggedUserType();
+	String username = jdb.getLoggedUser();
 	User user = jdb.getUser(username, userType);
 	%>
 	<%if (userType.equals("lender")) { %><a href="LenderHomePage.jsp">
 	<%} else { %><a href="RenterHomePage.jsp"><% } %>
 	<image id="navbar-logo" title = "View Feed" src="Logo.png">
 	</a>
-	<a href="ProfilePage.jsp?user=<%=user.getUsername()%>&userType=<%=user.getUserType()%>">
+	<a href="ProfilePage.jsp?user=<%=username%>&userType=<%=userType%>">
 		<div style="height: 75px; border-left: 1px solid black; float: right;">
-			<image id="profile-picture" class="navbar-item" title="Profile" src="<%=user.getImage() %>" style="margin-top: 10px">
+			<image id="profile-picture" class="navbar-item" title="Profile" src="<%if(user!=null){%> <%= user.getImage() %> <%} %>" style="margin-top: 10px">
 		</div>
 	</a>
 	<a href="Messages.jsp">
 		<div style="height: 75px; border-left: 1px solid black; float: right;">
 			<image class="navbar-item" title="Inbox" src="mail.png" style="margin-top: 5px">
-			<div style="margin-top: -15px;">(0)</div>
+			<div style="margin-top: -15px;">(<%=jdb.countUnreadMessages(username) %>)</div>
 		</div>
 	</a>
 	

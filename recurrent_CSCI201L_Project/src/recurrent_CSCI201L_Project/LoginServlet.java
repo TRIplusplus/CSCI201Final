@@ -21,7 +21,11 @@ public class LoginServlet extends HttpServlet {
 
 		String errorMessage = "";
 
-		JDBCTest jdb = new JDBCTest();
+		JDBCTest jdb = (JDBCTest)request.getSession().getAttribute("jdb"); 
+		if (jdb == null) {
+			jdb = new JDBCTest();
+			request.getSession().setAttribute("jdb", jdb);
+		}
 		request.getSession().setAttribute("jdb", jdb);
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -29,8 +33,8 @@ public class LoginServlet extends HttpServlet {
 		try {
 			if (!jdb.validUsernameLender(username)) {
 				if (!jdb.correctPasswordLender(username, password)) {
-					request.getSession().setAttribute("loggeduser", username);
-					request.getSession().setAttribute("username", username);
+					jdb.setLoggedUser(username);
+					jdb.setLoggedUserType("lender");
 					request.getSession().setAttribute("userType", "lender");
 				} else {
 					errorMessage = "Username and password do not match";

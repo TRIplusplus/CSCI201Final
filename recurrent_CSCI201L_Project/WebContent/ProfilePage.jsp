@@ -9,7 +9,16 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Your Profile</title>
 	</head>
-	<body>
+	<body style="text-align:center">
+		<script type="text/javascript">
+			function displayPopup() {
+				document.getElementById('popup').style.display = 'block';
+			}
+			
+			function closePopup() {
+				document.getElementById('popup').style.display = 'none';
+			}
+		</script>
 		<%@include file="Navbar.jsp" %>
 		<%
 		User u = jdb.getUser(request.getParameter("user"), request.getParameter("userType"));
@@ -24,18 +33,21 @@
 			<div id="profile_email">
 				<div>Email: <%=u.getEmailAddress() %></div>   
 			</div>
-		</div>
-		<%if (u != user) { %>
+		</div></br></br>
+		<%if (!u.getUsername().equals(user.getUsername())) { %>
 		<button id="lendnew-button" onclick="displayPopup()">Send Message</button>
-		<%} %>
+		<%} else { %>
+		<input type ="button" name="login" value="Log Out" onclick="location.href='${pageContext.request.contextPath}/HomePage.jsp'"/>
+		<% } %>
 		<div id="popup">
 			<span id="popup-close" onclick="closePopup()">X</span>
-			<form name="lenderForm" action="SendMessageServlet">
+			<form name="lenderForm" method="GET" action="SendMessageServlet?receiver=" + <%=u.getUsername() %>>
 				<strong>Send A Message To <%=u.getUsername() %></strong><br><br>
 				Title</br>
-				<input type="input" name="title"><br/><br/>
+				<input type="input" name="title" style="width: 500px;"><br/><br/>
 				Message</br>
-				<input type="input" name="image" style = "height: 300px;"><br/><br/>
+				<input type="input" name="message" style = "padding-bottom: 300px; width: 500px;"><br/><br/>
+				<input type="input" name="receiver" value="<%=u.getUsername() %>" style = "display:none;">
 				<input type="submit" value="Send Message">
 			</form>
 		</div>
