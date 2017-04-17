@@ -22,7 +22,6 @@ public class SignUpServlet extends HttpServlet {
 		String errorMessage = "";
 
 		JDBCTest jdb = new JDBCTest();
-		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String image = request.getParameter("image");
@@ -62,6 +61,7 @@ public class SignUpServlet extends HttpServlet {
 					response.getWriter().write(errorMessage);
 				} else {
 					Lender lender = new Lender(username, password, image, email);
+					System.out.println("new Lender made");
 					jdb.addLender(username, password, image, email);
 					request.getSession().setAttribute("loggedUser", username);
 				}

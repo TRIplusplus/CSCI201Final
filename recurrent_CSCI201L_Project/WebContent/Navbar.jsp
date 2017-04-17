@@ -2,10 +2,20 @@
     pageEncoding="ISO-8859-1"%>
 <link rel="stylesheet" type="text/css" href="/HomePage.css" />
 <div id="navbar">
+	<%@ page import="recurrent_CSCI201L_Project.JDBCTest" %>
+	<%@ page import="recurrent_CSCI201L_Project.User" %>
+	<%JDBCTest jdb = (JDBCTest)request.getSession().getAttribute("jdb");
+	String userType = (String)request.getSession().getAttribute("userType");
+	String username = (String)request.getSession().getAttribute("username");
+	User user = jdb.getUser(username, userType);
+	%>
+	<%if (userType.equals("lender")) { %><a href="LenderHomePage.jsp">
+	<%} else { %><a href="RenterHomePage.jsp"><% } %>
 	<image id="navbar-logo" title = "View Feed" src="Logo.png">
+	</a>
 	<a href="ProfilePage.jsp">
 		<div style="height: 75px; border-left: 1px solid black; float: right;">
-			<image class="navbar-item" title="Profile" src="guest-icon.png" style="margin-top: 10px">
+			<image class="navbar-item" title="Profile" src="<%=user.getImage() %>" style="margin-top: 10px">
 		</div>
 	</a>
 	<a href="Messages.jsp">

@@ -67,7 +67,8 @@ public class JDBCTest {
 		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, username);
 			pstmt.setString(2, password);
-			pstmt.setString(3, email);
+			pstmt.setString(3, image);
+			pstmt.setString(4, email);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage() + "boo");
@@ -80,7 +81,8 @@ public class JDBCTest {
 		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, username);
 			pstmt.setString(2, password);
-			pstmt.setString(3, email);
+			pstmt.setString(3, image);
+			pstmt.setString(4, email);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage() + "boo");

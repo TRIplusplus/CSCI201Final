@@ -26,6 +26,8 @@
 				<input type ="text" name="username"/></br>
 				Password</br>
 				<input type ="password" name="password"/></br>
+				Image</br>
+				<input type="text" name="image"></br>
 				Email</br>
 				<input type ="text" name="email"/></br>
 				<input type="radio" id='renter' name='usertype'/ value='renter'>Renter</input>
@@ -37,7 +39,6 @@
     </div>
     <script>
 		function sendErrorMessage() {
-
 			var userType = "";
 			userType = $('input:radio[name=usertype]:checked').val();
 			
@@ -50,10 +51,11 @@
  			var email = "";
 			var email = document.inputForm.email.value;
 			
+			var image = "";
+			var image = document.inputForm.image.value;
 			
 			var errorMessage = ""; 
-
-			if (username==""|| password =="" || email==""){
+			if (username==""|| password =="" || email=="" || image==""){
 				errorMessage = "There is a missing field. Please input information into all required fields"; 
 			} 
   			else {
@@ -64,7 +66,7 @@
  	 					withCredential: true
  	 				},
  	 				data: {
- 	 					'username': username, 'password': password, 'email': email, 'userType': userType
+ 	 					'username': username, 'password': password, 'email': email, 'image': image, 'userType': userType
  	 				}, 
  	 				success: function(msg){
  	 					if (msg.match("There is a missing field. Please input information into all required fields") || msg.match("Invalid email address") || msg.match("Username has already been chosen. Please choose another")){
