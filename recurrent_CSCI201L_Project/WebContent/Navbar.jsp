@@ -6,8 +6,11 @@
 	<%@ page import="recurrent_CSCI201L_Project.User" %>
 	<%JDBCTest jdb = (JDBCTest)request.getSession().getAttribute("jdb");
 	String userType = (String)request.getSession().getAttribute("userType");
-	String username = (String)request.getSession().getAttribute("username");
+	String username = (String)request.getSession().getAttribute("loggedUser");
+	System.out.println(username + ":" + userType);
 	User user = jdb.getUser(username, userType);
+	System.out.println(user);
+	System.out.println(user.getImage());
 	%>
 	<%if (userType.equals("lender")) { %><a href="LenderHomePage.jsp">
 	<%} else { %><a href="RenterHomePage.jsp"><% } %>
@@ -15,7 +18,7 @@
 	</a>
 	<a href="ProfilePage.jsp">
 		<div style="height: 75px; border-left: 1px solid black; float: right;">
-			<image class="navbar-item" title="Profile" src="<%=user.getImage() %>" style="margin-top: 10px">
+			<image id="profile-picture" class="navbar-item" title="Profile" src="<%=user.getImage() %>" style="margin-top: 10px">
 		</div>
 	</a>
 	<a href="Messages.jsp">

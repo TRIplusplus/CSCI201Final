@@ -88,6 +88,27 @@ public class JDBCTest {
 			System.out.println(e.getMessage() + "boo");
 		}
 	}
+	
+	public void addItem(Item item) {
+		String sql = "INSERT INTO items(lender, renter, title, image, startdate, enddate, description, price, xcoord, ycoord) "
+				+ "VALUES(?,?,?,?,?,?,?,?,?,?)";
+		
+		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, item.getLender());
+			pstmt.setString(2, item.getRenter());
+			pstmt.setString(3, item.getTitle());
+			pstmt.setString(4, item.getImage());
+			pstmt.setDate(5, item.getStartDate());
+			pstmt.setDate(6, item.getEndDate());
+			pstmt.setString(7, item.getDescription());
+			pstmt.setDouble(8, item.getPrice());
+			pstmt.setDouble(9, item.getX());
+			pstmt.setDouble(10, item.getY());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage() + "boo");
+		}
+	}
 
 	public boolean validUsernameRenter(String username_) throws SQLException {
 
@@ -164,13 +185,14 @@ public class JDBCTest {
 	//getters
 	public User getUser(String username, String type) {
 		try {
-			String sql = "SELECT username FROM " + type + " WHERE username = '" + username + "'";
+			String sql = "SELECT * FROM " + type + "s WHERE username = '" + username + "'";
 	
 			Connection conn = JDBCTest.connect();
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
 			
 			while (rs.next()) {
+				System.out.println("user found");
 				username = rs.getString(1);
 				String password = rs.getString(2);
 				String image = rs.getString(3);
@@ -181,6 +203,7 @@ public class JDBCTest {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		System.out.println("user not found");
 		return null;
 	}
 }

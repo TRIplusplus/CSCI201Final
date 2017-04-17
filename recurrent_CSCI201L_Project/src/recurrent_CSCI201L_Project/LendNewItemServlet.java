@@ -1,6 +1,9 @@
 package recurrent_CSCI201L_Project;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,7 +30,19 @@ public class LendNewItemServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		JDBCTest jdb = (JDBCTest)request.getSession().getAttribute("jdb");
+		String username = (String)request.getSession().getAttribute("loggedUser");
+		String title = request.getParameter("name");
+		String image = request.getParameter("image");
+		Date startdate = Date.valueOf(request.getParameter("start_date"));
+		Date enddate = Date.valueOf(request.getParameter("end_date"));
+		String description = request.getParameter("description");
+		double price = Double.parseDouble(request.getParameter("price"));
+		String address = request.getParameter("address");
+		System.out.println("adding new item");
+		Item item = new Item(username, image, title, startdate, enddate, description, price, 0, 0);
+		jdb.addItem(item);
 		
+		response.sendRedirect("LenderHomePage.jsp");
 	}
 
 	/**

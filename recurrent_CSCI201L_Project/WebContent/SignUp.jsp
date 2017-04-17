@@ -73,8 +73,14 @@
  	 	 					$('#error').text(msg);
  	 	 					console.log(msg)
  	 					} else {
- 	 						var successUrl = "LenderLogin.jsp";
- 	 					    window.location.href = successUrl;
+ 	 						if (userType=='lender') {
+ 	 							var successUrl = "LenderHomePage.jsp";
+ 	 					    	window.location.href = successUrl;
+ 	 					    } else if (userType=='renter') {
+ 	 							var successUrl = "RenterHomePage.jsp";
+ 	 					    	window.location.href = successUrl;
+ 	 					    }
+ 	 						
  	 					}
  	 				},
  				}); 
