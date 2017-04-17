@@ -19,6 +19,7 @@ CREATE TABLE renters (
 );
 
 CREATE TABLE items (
+	id INT AUTO_INCREMENT,
 	leaser VARCHAR(45) NOT NULL,
     renter VARCHAR(45) NOT NULL,
 	title VARCHAR(45) NOT NULL,
@@ -29,17 +30,16 @@ CREATE TABLE items (
     price INT(45) NOT NULL,
     xcoord double NOT NULL,
     ycoord double NOT NULL,
-    Primary Key (leaser)
+    Primary Key (id)
 );
 
 CREATE TABLE messages (
+	id INT auto_increment,
 	sender VARCHAR(45) NOT NULL,
     receiver VARCHAR(45) NOT NULL,
     title VARCHAR (256) NOT NULL,
     message VARCHAR(256) NOT NULL,
     unread BOOL NOT NULL,
     date DATE NOT NULL,
-    Primary Key (sender)
+    Primary Key (id)
 )
-
-
