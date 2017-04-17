@@ -22,14 +22,16 @@ public class RenterLoginServlet extends HttpServlet {
 		String errorMessage = "";
 		System.out.println("got here");
 		JDBCTest jdb = new JDBCTest();
+		request.getSession().setAttribute("jdb", jdb);
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-
+		
 		try {
 			if (!jdb.validUsernameRenter(username)) {
 				if (!jdb.correctPasswordRenter(username, password)) {
 					request.getSession().setAttribute("loggeduser", username);
 					request.getSession().setAttribute("username", username);
+					request.getSession().setAttribute("userType", "renter");
 				} else {
 					errorMessage = "Username and password do not match";
 					response.setContentType("text/plain");

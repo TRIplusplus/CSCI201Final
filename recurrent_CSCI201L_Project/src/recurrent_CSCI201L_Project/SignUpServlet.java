@@ -22,6 +22,7 @@ public class SignUpServlet extends HttpServlet {
 		String errorMessage = "";
 
 		JDBCTest jdb = new JDBCTest();
+		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String image = request.getParameter("image");

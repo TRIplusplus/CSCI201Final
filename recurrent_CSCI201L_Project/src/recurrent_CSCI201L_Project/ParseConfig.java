@@ -12,7 +12,7 @@ public class ParseConfig {
 
 	public ParseConfig() throws IOException {
 		FileReader myFile = new FileReader(
-				"/Users/emalysz/Documents/workspace/recurrent_CSCI201L_Project/src/config.txt");
+				"C:\\Users\\Mommy\\CSCI201Final\\recurrent_CSCI201L_Project\\src\\config.txt");
 
 		BufferedReader bufferReader = new BufferedReader(myFile);
 		String line = bufferReader.readLine();

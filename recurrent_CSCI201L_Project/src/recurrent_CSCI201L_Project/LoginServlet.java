@@ -22,6 +22,7 @@ public class LoginServlet extends HttpServlet {
 		String errorMessage = "";
 
 		JDBCTest jdb = new JDBCTest();
+		request.getSession().setAttribute("jdb", jdb);
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
@@ -30,6 +31,7 @@ public class LoginServlet extends HttpServlet {
 				if (!jdb.correctPasswordLender(username, password)) {
 					request.getSession().setAttribute("loggeduser", username);
 					request.getSession().setAttribute("username", username);
+					request.getSession().setAttribute("userType", "lender");
 				} else {
 					errorMessage = "Username and password do not match";
 					response.setContentType("text/plain");
