@@ -130,9 +130,28 @@ input[type=button]:hover {
 	border-collapse: collapse;
 }
 
-#message-table th, tr, td {
+#message-container {
+	width: 50%;
+	margin-left: 25%;
+	min-height: 400px;
+	text-align: left;
+	padding: 20px;
+	background-color: rgba(230,230,230,1);
+	border: 1px solid grey;
+}
+
+td {
+	border: 1px solid white;
+	padding: 5px;
+}
+
+#message-table.th, #message-table.tr, #message-table.td {
 	border: 1px solid black;
 	padding: 10px;
+}
+
+td:hover {
+	border: 1px solid grey;
 }
 
 #message-table-header {

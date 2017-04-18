@@ -25,8 +25,8 @@
 		</div>
 	</a>
 	
-	<form name="searchForm" action="SearchServlet.jsp">
-		<select class="navbar-item" id="navbar-dropdown" name="navbar-dropdown" style="margin-left: 20px;">
+	<form name="searchForm" method="GET" action="SearchPage.jsp">
+		<select class="navbar-item" id="navbar-dropdown" name="criteria" style="margin-left: 20px;">
 			<option value="Item">Search criteria</option>
 			<option value="Item">Item</option>
 			<option value="Username">User</option>

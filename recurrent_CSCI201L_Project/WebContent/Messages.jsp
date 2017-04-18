@@ -9,12 +9,15 @@
 	</head>
 	<body>
 		<%@include file="Navbar.jsp" %>
+		<style>
+			td a {color: grey; text-decoration: none;}
+		</style>
 		<h1 style="text-align: center; margin-top: 10px;">Your Messages</h1>
 		<table id="message-table">
 			<thead id="message-table-header">
-				<td>From</td>
-				<td>Subject</td>	
-				<td>Date</td>
+				<td style="border: 1px solid black;" width="20%">From</td>
+				<td style="border: 1px solid black;" width="50%">Subject</td>	
+				<td style="border: 1px solid black;" width="20%">Date</td>
 			</thead>
 			<%@ page import="java.util.ArrayList" %>
 			<%@ page import="recurrent_CSCI201L_Project.Message" %>
@@ -25,13 +28,13 @@
 			</tr>
 			<% } else {
 					for (int i=0; i<messages.size(); i++) {%>
-					<% if(!messages.get(i).isRead()) {%> <strong> <% } %>
-					<tr>
-						<td><%=messages.get(i).getSender() %></td>
-						<td><%=messages.get(i).getTitle() %></td>
-						<td><%=messages.get(i).getDate().toString() %></td>
+					<tr style="color: black; text-decoration: none;">
+					
+						<td style="border: 0px"><a href="MessagePage.jsp?id=<%=messages.get(i).getID()%>"><% if(!messages.get(i).isRead()) {%> <b> <% } %><%=messages.get(i).getSender() %><% if(!messages.get(i).isRead()) {%> </b> <% } %></a></td>
+						<td style="border: 0px"><a href="MessagePage.jsp?id=<%=messages.get(i).getID()%>"><% if(!messages.get(i).isRead()) {%> <b> <% } %><%=messages.get(i).getTitle() %><% if(!messages.get(i).isRead()) {%> </b> <% } %></a></td>
+						<td style="border: 0px"><a href="MessagePage.jsp?id=<%=messages.get(i).getID()%>"><% if(!messages.get(i).isRead()) {%> <b> <% } %><%=messages.get(i).getDate().toString() %><% if(!messages.get(i).isRead()) {%> </b> <% } %></a></td>
+					
 					</tr>
-					<% if(!messages.get(i).isRead()) {%> </strong> <% } %>
 			<%		} 
 				}%>
 				

@@ -245,13 +245,11 @@ public class JDBCTest {
 	}
 	
 	public void readMessage(int ID) {
-		try {	
-			String sql = "UPDATE messages SET unread = false WHERE id = " + ID;
-			Connection conn = JDBCTest.connect();
-			Statement st = conn.createStatement();
-			ResultSet rs = st.executeQuery(sql);
+		String sql = "UPDATE messages SET unread = '0' WHERE id = " + ID;
+		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage() + "boo");
 		}
 	}
 	
@@ -302,6 +300,40 @@ public class JDBCTest {
 	public ArrayList<Item> getItemsForLender(String username) {
 		try {
 			String sql = "SELECT * FROM items WHERE lender = '" + username + "'";
+	
+			Connection conn = JDBCTest.connect();
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			
+			ArrayList<Item> items = new ArrayList<Item>();
+			
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String lender = rs.getString(2);
+				String renter = rs.getString(3);
+				String title = rs.getString(4);
+				String image = rs.getString(5);
+				Date startDate = rs.getDate(6);
+				Date endDate = rs.getDate(7);
+				String description = rs.getString(8);
+				Double price = rs.getDouble(9);
+				Double xcoord = rs.getDouble(10);
+				Double ycoord = rs.getDouble(11);
+				
+				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
+				items.add(item);
+			}
+			
+			return items;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public ArrayList<Item> getItemsForRenter(String username) {
+		try {
+			String sql = "SELECT * FROM items WHERE renter = '" + username + "'";
 	
 			Connection conn = JDBCTest.connect();
 			Statement st = conn.createStatement();
@@ -413,7 +445,10 @@ public class JDBCTest {
 		
 		for (Item item : searchList) {
 			for (Item item2: locationList) {
-				if (item.getID() == item2.getID()) intersection.add(item);
+				if (item.getID() == item2.getID()) {
+					intersection.add(item);
+					break;
+				}
 			}
 		}
 		return intersection;
@@ -444,6 +479,36 @@ public class JDBCTest {
 				
 				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
 				return item;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public Message getMessageByID(int ID) {
+		try {
+			String sql = "SELECT * FROM messages WHERE id = " + ID;
+	
+			Connection conn = JDBCTest.connect();
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			
+			
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String sender = rs.getString(2);
+				String receiver = rs.getString(3);
+				String title = rs.getString(4);
+				String text = rs.getString(5);
+				boolean read = !(rs.getBoolean(6));
+				Date date = rs.getDate(7);
+				
+				Message message = new Message(sender, receiver, title, text);
+				message.setDate(date);
+				if (read) message.markAsRead();
+				message.setID(id);
+				return message;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -9,22 +9,39 @@
 	</head>
 	<body>
 		<%@include file="Navbar.jsp" %>
-		<div id="map" style="width:50%;height:550px;float:right;"></div>
-		<script>
-			function myMap() {
-				var newcenter = new google.maps.LatLng(34.05349, -118.2453);
-			  var myCenter = new google.maps.LatLng(51.508742,-0.120850);
-			  
-			  var mapCanvas = document.getElementById("map");
-			  var mapOptions = {center: newcenter, zoom: 5};
-			  var map = new google.maps.Map(mapCanvas, mapOptions);
-			  var marker = new google.maps.Marker({position:myCenter});
-			  var marker1 = new google.maps.Marker({position:newcenter});
-			  marker.setMap(map);
-			  marker1.setMap(map);	  
-			}
-		</script>
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp3SIzf3bZ3WAW-Pf5Qmdxs20pCfVIz-U&callback=myMap"></script>
-		
+		<div id="lent-items" style="text-align: center">
+			<h2>Search to begin your experience.</h2>
+			<form name="searchForm" method="GET" action="SearchPage.jsp">
+				<input style="width: 300px; height: 30px; font-size: 110%; margin: 5px;" type="text" name="search" placeholder="Search Term">
+				<input style="width: 300px; height: 30px; font-size: 110%; margin: 5px;" type="text" name="location" placeholder="Location">
+				<input style="height: 40px; width: 100px; font-size: 105%" type="submit" style="width: 100px;"></input>
+			</form>
+			<h3>Currently Renting Items:</h3>
+			<div id="lent-items-table" style="text-align: center;">
+			<%@ page import="java.util.ArrayList" %>
+			<%@ page import="recurrent_CSCI201L_Project.Item" %>
+			<%ArrayList<Item> items = jdb.getItemsForRenter(username);
+			if (items == null || items.size() == 0) {
+			%>
+				You are not renting any items.<br>
+				Use the search above to search for items.
+			<%} else {%>
+				<table style="border: 0px; width: 60%; margin-left: 17%">
+					<% for (int i=0; i<items.size(); i+=3) {%>
+						<tr>
+						<%for (int j=i; j<i+3; j++) {
+							if (j<items.size()) {%>
+							<td>
+								<img src="<%=items.get(j).getImage()%>" style="max-width: 100px; max-height: 100px;"></br>
+								<%=items.get(j).getTitle()%>
+							</td>
+			<% 				}
+						}%>
+						</tr>
+			<%		}%>
+				</table>
+			<%} %>
+			</div>
+		</div>
 	</body>
 </html>
