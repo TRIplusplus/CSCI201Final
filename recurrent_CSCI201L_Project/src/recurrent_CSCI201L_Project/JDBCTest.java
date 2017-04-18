@@ -401,7 +401,8 @@ public class JDBCTest {
 				Double xcoord = rs.getDouble(10);
 				Double ycoord = rs.getDouble(11);
 				
-				if (description.contains((CharSequence)search) || title.contains((CharSequence)search)) {
+				if (description.toLowerCase().contains((CharSequence)search.toLowerCase()) 
+						|| title.toLowerCase().contains((CharSequence)search.toLowerCase())) {
 					Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
 					item.setID(id);
 					item.setRenter(renter);
