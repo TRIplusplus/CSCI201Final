@@ -41,13 +41,14 @@
 		<% } %>
 		<div id="popup">
 			<span id="popup-close" onclick="closePopup()">X</span>
-			<form name="lenderForm" method="GET" action="SendMessageServlet?receiver=" + <%=u.getUsername() %>>
+			<form name="lenderForm" method="GET" action="SendMessageServlet?receiver=<%=u.getUsername()%>&receiverType=<%=u.getUserType()%>" >
 				<strong>Send A Message To <%=u.getUsername() %></strong><br><br>
 				Title</br>
 				<input type="input" name="title" style="width: 500px;"><br/><br/>
 				Message</br>
 				<input type="input" name="message" style = "padding-bottom: 300px; width: 500px;"><br/><br/>
 				<input type="input" name="receiver" value="<%=u.getUsername() %>" style = "display:none;">
+				<input type="input" name="receiverType" value="<%=u.getUserType() %>" style = "display:none;">
 				<input type="submit" value="Send Message">
 			</form>
 		</div>

@@ -30,7 +30,7 @@ public class LendNewItemServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		JDBCTest jdb = (JDBCTest)request.getSession().getAttribute("jdb");
-		String username = (String)request.getSession().getAttribute("loggedUser");
+		String username = jdb.getLoggedUser();
 		String title = request.getParameter("name");
 		String image = request.getParameter("image");
 		Date startdate = Date.valueOf(request.getParameter("start_date"));

@@ -253,6 +253,15 @@ public class JDBCTest {
 		}
 	}
 	
+	public void rentItem(int ID, String renter) {
+		String sql = "UPDATE items SET renter = '" + renter + "' WHERE id = " + ID;
+		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
 	public ArrayList<Message> getMessagesForUser(String username) {
 		try {
 			String sql = "SELECT * FROM messages WHERE receiver = '" + username + "'";
@@ -321,6 +330,8 @@ public class JDBCTest {
 				Double ycoord = rs.getDouble(11);
 				
 				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
+				item.setID(id);
+				item.setRenter(renter);
 				items.add(item);
 			}
 			
@@ -355,6 +366,8 @@ public class JDBCTest {
 				Double ycoord = rs.getDouble(11);
 				
 				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
+				item.setID(id);
+				item.setRenter(renter);
 				items.add(item);
 			}
 			
@@ -390,6 +403,8 @@ public class JDBCTest {
 				
 				if (description.contains((CharSequence)search) || title.contains((CharSequence)search)) {
 					Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
+					item.setID(id);
+					item.setRenter(renter);
 					items.add(item);
 				}
 			}
@@ -426,7 +441,9 @@ public class JDBCTest {
 				Double ycoord = rs.getDouble(11);
 				
 				if (Math.sqrt((xcoord-x)*(xcoord-x) + (ycoord-y)*(ycoord-y)) < acceptableDistance) {
-					Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
+					Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord);
+					item.setID(id);
+					item.setRenter(renter);
 					items.add(item);
 				}
 			}
@@ -462,8 +479,6 @@ public class JDBCTest {
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
 			
-			ArrayList<Item> items = new ArrayList<Item>();
-			
 			while (rs.next()) {
 				int id = rs.getInt(1);
 				String lender = rs.getString(2);
@@ -478,6 +493,8 @@ public class JDBCTest {
 				Double ycoord = rs.getDouble(11);
 				
 				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
+				item.setRenter(renter);
+				item.setID(id);
 				return item;
 			}
 		} catch (SQLException e) {

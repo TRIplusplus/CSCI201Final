@@ -30,20 +30,23 @@
 			<%if (results.size() == 0) {%> <div style="position: relative; top: 10%; left: 45%">No search results.</div> 
 			<%} else {%>
 				<table style="width: 100%; border-collapse: collapse">
-					<%for(int i=0; i<results.size(); i++) {%>
+					<%for(int i=0; i<results.size(); i++) {
+						if(results.get(i).getRenter() == null) {%>
 					<tr>
 						<td style="border: 1px solid black; padding: 10px; overflow: ellipsis;">
 							<img src="<%=results.get(i).getImage()%>" style="height: 100px; float: left;">
-							<div style="float: left">
-								<strong><%=results.get(i).getTitle() %></strong></br></br>
+							<div style="float: left; margin-left: 10px;">
+								<strong><a href="ItemPage.jsp?id=<%=results.get(i).getID()%>"><%=results.get(i).getTitle() %></a></strong></br></br>
 								Lender: <a href="ProfilePage.jsp?user=<%=results.get(i).getLender() %>&userType=lender">
 								<%=results.get(i).getLender() %></a></br>
+								Price: $<%=results.get(i).getPrice() %></br>
 								Rent from: <%=results.get(i).getStartDate()%> to <%=results.get(i).getEndDate()%></br>
 								Description: <%=results.get(i).getDescription()%>
 							</div>
 						</td>
 					</tr>
-			<%		} %>
+			<%			}
+					} %>
 				</table>
 			<%}%>
 		</div>

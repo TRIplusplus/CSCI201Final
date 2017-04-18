@@ -59,8 +59,10 @@
 						<%for (int j=i; j<i+3; j++) {
 							if (j<items.size()) {%>
 							<td>
+								<a href="ItemPage.jsp?id=<%=items.get(j).getID()%>">
 								<img src="<%=items.get(j).getImage()%>" style="max-width: 100px; max-height: 100px;"></br>
 								<%=items.get(j).getTitle()%>
+								</a>
 							</td>
 			<% 				}
 						}%>

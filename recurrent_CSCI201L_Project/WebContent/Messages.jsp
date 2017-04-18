@@ -27,7 +27,7 @@
 				<td colspan="3">You have no messages.</td>
 			</tr>
 			<% } else {
-					for (int i=0; i<messages.size(); i++) {%>
+					for (int i=messages.size()-1; i>=0; i--) {%>
 					<tr style="color: black; text-decoration: none;">
 					
 						<td style="border: 0px"><a href="MessagePage.jsp?id=<%=messages.get(i).getID()%>"><% if(!messages.get(i).isRead()) {%> <b> <% } %><%=messages.get(i).getSender() %><% if(!messages.get(i).isRead()) {%> </b> <% } %></a></td>

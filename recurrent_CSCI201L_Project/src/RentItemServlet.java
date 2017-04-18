@@ -1,23 +1,28 @@
-package recurrent_CSCI201L_Project;
+
 
 import java.io.IOException;
+import java.sql.Date;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import recurrent_CSCI201L_Project.Item;
+import recurrent_CSCI201L_Project.JDBCTest;
+
 /**
- * Servlet implementation class SendMessageServlet
+ * Servlet implementation class RentItemServlet
  */
-@WebServlet("/SendMessageServlet")
-public class SendMessageServlet extends HttpServlet {
+@WebServlet("/RentItemServlet")
+public class RentItemServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SendMessageServlet() {
+    public RentItemServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -28,13 +33,10 @@ public class SendMessageServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		JDBCTest jdb = (JDBCTest)request.getSession().getAttribute("jdb");
 		String username = jdb.getLoggedUser();
-		String receiver = request.getParameter("receiver");
-		String receiverType = request.getParameter("receiverType");
-		String title = request.getParameter("title");
-		String message = request.getParameter("message");
-		jdb.sendMessage(new Message(username, receiver, title, message));
+		int id = Integer.valueOf(request.getParameter("id"));
+		jdb.rentItem(id, username);
 		
-		response.sendRedirect("ProfilePage.jsp?user=" + receiver + "&userType=" + receiverType);
+		response.sendRedirect("RenterHomePage.jsp");
 	}
 
 	/**
