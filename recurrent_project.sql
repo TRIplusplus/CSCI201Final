@@ -5,7 +5,7 @@ USE recurrent;
 CREATE TABLE lenders (
 	username VARCHAR(45) NOT NULL,
     password1 VARCHAR(45) NOT NULL,
-    image VARCHAR(45) NOT NULL,
+    image VARCHAR(256) NOT NULL,
     email VARCHAR(45) NOT NULL,
     Primary Key (username)
 );
@@ -13,21 +13,21 @@ CREATE TABLE lenders (
 CREATE TABLE renters (
 	username VARCHAR(45) NOT NULL,
     password1 VARCHAR(45) NOT NULL,
-    image VARCHAR(45) NOT NULL,
+    image VARCHAR(256) NOT NULL,
 	email VARCHAR(45) NOT NULL,
     Primary Key (username)
 );
 
 CREATE TABLE items (
 	id INT AUTO_INCREMENT,
-	leaser VARCHAR(45) NOT NULL,
-    renter VARCHAR(45) NOT NULL,
+	lender VARCHAR(45) NOT NULL,
+    renter VARCHAR(45),
 	title VARCHAR(45) NOT NULL,
     image VARCHAR(256) NOT NULL,
     startdate DATE NOT NULL,
     enddate DATE NOT NULL,
     description VARCHAR(256) NOT NULL,
-    price INT(45) NOT NULL,
+    price double NOT NULL,
     xcoord double NOT NULL,
     ycoord double NOT NULL,
     Primary Key (id)
