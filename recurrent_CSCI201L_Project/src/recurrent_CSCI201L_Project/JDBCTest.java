@@ -1,6 +1,7 @@
 package recurrent_CSCI201L_Project;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -10,7 +11,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.UUID;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 //import org.json.*;
 
@@ -23,6 +27,15 @@ public class JDBCTest {
 	private static ResultSet rs;
 	String loggedUser;
 	String loggedUserType;
+	
+	private String readAll(Reader rd) throws IOException {
+		StringBuilder sb = new StringBuilder();
+		int cp;
+		while ((cp = rd.read()) != -1) {
+			sb.append((char) cp);
+		}
+		return sb.toString();
+	}
 
 	public JDBCTest() throws IOException {
 
@@ -110,7 +123,58 @@ public class JDBCTest {
 			System.out.println(e.getMessage() + "boo");
 		}
 	}
-
+	public String getLocationJson(String zip){
+		String url = "https://maps.googleapis.com/maps/api/geocode/"
+				+ "json?address="+zip+"&"
+				+ "key=AIzaSyC-fSJYjRrDlEQTwVphjJc8wzBydKGzt88";
+		//	System.out.println(url);
+		URL googlemap;
+		try {
+			googlemap = new URL(url);
+			BufferedReader in = new BufferedReader(new InputStreamReader(googlemap.openStream()));
+			String inputLine = readAll(in);
+			
+			return inputLine;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	public String setlng(String json){
+		String lng = null;
+		try {
+			
+			JSONObject jo = new JSONObject(json);
+			JSONArray ja = jo.getJSONArray("results");
+			JSONObject jo_geo = (JSONObject) ja.getJSONObject(0).get("geometry");
+			JSONObject jo_loc = (JSONObject) jo_geo.get("location");
+			Double d_lng = jo_loc.getDouble("lng");
+			lng = d_lng.toString();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return lng;
+	}
+	public String setlat(String json){
+		String lat = null;
+		try {
+			
+			JSONObject jo = new JSONObject(json);
+			JSONArray ja = jo.getJSONArray("results");
+			JSONObject jo_geo = (JSONObject) ja.getJSONObject(0).get("geometry");
+			JSONObject jo_loc = (JSONObject) jo_geo.get("location");
+			Double d_lat = jo_loc.getDouble("lat");
+			lat = d_lat.toString();
+			//System.out.println(jo_loc.getDouble("lng"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return lat;
+	}
 	public void addItem(Item item) {
 		String sql = "INSERT INTO items(lender, renter, title, image, startdate, enddate, description, price, xcoord, ycoord) "
 				+ "VALUES(?,?,?,?,?,?,?,?,?,?)";
@@ -139,7 +203,7 @@ public class JDBCTest {
 		Connection conn = JDBCTest.connect();
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery(sql); // execute the query, and get a
-												// java resultset
+		// java resultset
 
 		// if this ID already exists, we quit
 		if (rs.absolute(1)) {
@@ -158,7 +222,7 @@ public class JDBCTest {
 		Connection conn = JDBCTest.connect();
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery(sql); // execute the query, and get a
-												// java resultset
+		// java resultset
 
 		// if this ID already exists, we quit
 		if (rs.absolute(1)) {
@@ -177,7 +241,7 @@ public class JDBCTest {
 		Connection conn = JDBCTest.connect();
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery(sql); // execute the query, and get a
-												// java resultset
+		// java resultset
 
 		// if this ID already exists, we quit
 		if (rs.absolute(1)) {
@@ -194,7 +258,7 @@ public class JDBCTest {
 		Connection conn = JDBCTest.connect();
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery(sql); // execute the query, and get a
-												// java resultset
+		// java resultset
 
 		// if this ID already exists, we quit
 		if (rs.absolute(1)) {
@@ -204,7 +268,7 @@ public class JDBCTest {
 		}
 	}
 
-	// getters
+	//getters
 	public User getUser(String username, String type) {
 		try {
 			String sql = "SELECT * FROM " + type + "s WHERE username = '" + username + "'";
@@ -219,10 +283,8 @@ public class JDBCTest {
 				String password = rs.getString(2);
 				String image = rs.getString(3);
 				String email = rs.getString(4);
-				if (type.equals("renter"))
-					return new Renter(username, password, image, email);
-				else
-					return new Lender(username, password, image, email);
+				if (type.equals("renter")) return new Renter(username, password, image, email);
+				else return new Lender(username, password, image, email); 
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -245,60 +307,6 @@ public class JDBCTest {
 			System.out.println(e.getMessage());
 		}
 
-	}
-
-	public void addLender(String username, String password, String email) {
-		String sql = "INSERT INTO lenders(username, password1, email) VALUES(?,?,?)";
-
-		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setString(1, username);
-			pstmt.setString(2, password);
-			pstmt.setString(3, email);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println(e.getMessage() + "boo");
-		}
-
-		String hashPassword = hashPassword(password);
-		System.out.println(hashPassword);
-		String sql2 = "INSERT INTO recurrent.hashPassword(password1, password2) VALUES (?,?)";
-
-		try (Connection conn2 = JDBCTest.connect(); PreparedStatement pstmt2 = conn2.prepareStatement(sql2)) {
-			pstmt2.setString(1, password);
-			pstmt2.setString(2, hashPassword);
-			System.out.println("yay");
-		} catch (SQLException e) {
-			System.out.println(e.getMessage() + "boo");
-		}
-	}
-
-	public String hashPassword(String password) {
-		String uuid = UUID.randomUUID().toString();
-		return uuid;
-	}
-
-	public void addRenter(String username, String password, String email) {
-		System.out.println("got here");
-		String sql = "INSERT INTO renters(username, password1, email) VALUES(?,?,?)";
-
-		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setString(1, username);
-			pstmt.setString(2, password);
-			pstmt.setString(3, email);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println(e.getMessage() + "boo");
-		}
-
-		String hashPassword = hashPassword(password);
-		String sql2 = "INSERT INTO hashPassword(password1, password2) VALUES (?,?,?)";
-
-		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql2)) {
-			pstmt.setString(1, password);
-			pstmt.setString(2, hashPassword);
-		} catch (SQLException e) {
-			System.out.println(e.getMessage() + "boo");
-		}
 	}
 
 	public void readMessage(int ID) {
@@ -340,8 +348,7 @@ public class JDBCTest {
 
 				Message newMessage = new Message(sender, receiver, title, text);
 				newMessage.setDate(date);
-				if (read)
-					newMessage.markAsRead();
+				if (read) newMessage.markAsRead();
 				newMessage.setID(id);
 				messages.add(newMessage);
 			}
@@ -357,9 +364,8 @@ public class JDBCTest {
 		ArrayList<Message> messages = getMessagesForUser(username);
 		int count = 0;
 		if (messages != null) {
-			for (Message message : messages) {
-				if (!message.isRead())
-					count++;
+			for (Message message: messages) {
+				if (!message.isRead()) count++;
 			}
 		}
 		return count;
@@ -388,7 +394,7 @@ public class JDBCTest {
 				Double xcoord = rs.getDouble(10);
 				Double ycoord = rs.getDouble(11);
 
-				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord);
+				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
 				item.setID(id);
 				item.setRenter(renter);
 				items.add(item);
@@ -424,7 +430,7 @@ public class JDBCTest {
 				Double xcoord = rs.getDouble(10);
 				Double ycoord = rs.getDouble(11);
 
-				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord);
+				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
 				item.setID(id);
 				item.setRenter(renter);
 				items.add(item);
@@ -460,9 +466,9 @@ public class JDBCTest {
 				Double xcoord = rs.getDouble(10);
 				Double ycoord = rs.getDouble(11);
 
-				if (description.toLowerCase().contains((CharSequence) search.toLowerCase())
-						|| title.toLowerCase().contains((CharSequence) search.toLowerCase())) {
-					Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord);
+				if (description.toLowerCase().contains((CharSequence)search.toLowerCase()) 
+						|| title.toLowerCase().contains((CharSequence)search.toLowerCase())) {
+					Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
 					item.setID(id);
 					item.setRenter(renter);
 					items.add(item);
@@ -475,7 +481,65 @@ public class JDBCTest {
 		}
 		return null;
 	}
+	public ArrayList<Item> getItemstoDisplayonMap(){
 
+		try {
+			String sql = "SELECT * FROM items";
+			Connection conn = JDBCTest.connect();
+			Statement st;
+			st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			ArrayList<Item> items = new ArrayList<Item>();
+
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String lender = rs.getString(2);
+				String renter = rs.getString(3);
+				String title = rs.getString(4);
+				String image = rs.getString(5);
+				Date startDate = rs.getDate(6);
+				Date endDate = rs.getDate(7);
+				String description = rs.getString(8);
+				Double price = rs.getDouble(9);
+				Double xcoord = rs.getDouble(10);
+				Double ycoord = rs.getDouble(11);
+				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
+
+				item.setID(id);
+				item.setRenter(renter);
+				items.add(item);
+			}
+			return items;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	public String json_Geo(){
+		try {
+			ArrayList<Item> items = new ArrayList<Item>();
+			items = this.getItemstoDisplayonMap();
+			
+			JSONArray ja_location = new JSONArray();
+			for(int i=0;i<items.size();i++){
+				JSONObject js_location = new JSONObject();
+				js_location.put("lat", items.get(i).getX());
+				js_location.put("lng", items.get(i).getY());
+				ja_location.put(js_location);
+			}
+			JSONObject start_location = new JSONObject();
+			start_location.put("locations", ja_location);
+		//	System.out.println(start_location.toString());
+			return start_location.toString();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 	public ArrayList<Item> getItemsNearLocation(double x, double y) {
 		try {
 			int acceptableDistance = 50;
@@ -500,7 +564,7 @@ public class JDBCTest {
 				Double xcoord = rs.getDouble(10);
 				Double ycoord = rs.getDouble(11);
 
-				if (Math.sqrt((xcoord - x) * (xcoord - x) + (ycoord - y) * (ycoord - y)) < acceptableDistance) {
+				if (Math.sqrt((xcoord-x)*(xcoord-x) + (ycoord-y)*(ycoord-y)) < acceptableDistance) {
 					Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord);
 					item.setID(id);
 					item.setRenter(renter);
@@ -521,7 +585,7 @@ public class JDBCTest {
 		ArrayList<Item> intersection = new ArrayList<Item>();
 
 		for (Item item : searchList) {
-			for (Item item2 : locationList) {
+			for (Item item2: locationList) {
 				if (item.getID() == item2.getID()) {
 					intersection.add(item);
 					break;
@@ -552,7 +616,7 @@ public class JDBCTest {
 				Double xcoord = rs.getDouble(10);
 				Double ycoord = rs.getDouble(11);
 
-				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord);
+				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
 				item.setRenter(renter);
 				item.setID(id);
 				return item;
@@ -571,6 +635,7 @@ public class JDBCTest {
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
 
+
 			while (rs.next()) {
 				int id = rs.getInt(1);
 				String sender = rs.getString(2);
@@ -582,8 +647,7 @@ public class JDBCTest {
 
 				Message message = new Message(sender, receiver, title, text);
 				message.setDate(date);
-				if (read)
-					message.markAsRead();
+				if (read) message.markAsRead();
 				message.setID(id);
 				return message;
 			}

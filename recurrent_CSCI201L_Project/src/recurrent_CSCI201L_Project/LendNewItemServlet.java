@@ -37,9 +37,16 @@ public class LendNewItemServlet extends HttpServlet {
 		Date enddate = Date.valueOf(request.getParameter("end_date"));
 		String description = request.getParameter("description");
 		double price = Double.parseDouble(request.getParameter("price"));
-		String address = request.getParameter("address");
+		String address = request.getParameter("zip");
+		System.out.println("address: "+address);
+		String json = jdb.getLocationJson(address);
+		System.out.println("json address: "+json);
+		String lat = jdb.setlat(json);
+		String lng = jdb.setlng(json);
+		System.out.println("lat "+lat);
+		System.out.println("lng "+lng);
 		System.out.println("adding new item");
-		Item item = new Item(username, image, title, startdate, enddate, description, price, 0, 0);
+		Item item = new Item(username, image, title, startdate, enddate, description, price,Double.parseDouble(lat), Double.parseDouble(lng));
 		jdb.addItem(item);
 		
 		response.sendRedirect("LenderHomePage.jsp");
