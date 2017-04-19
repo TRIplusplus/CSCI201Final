@@ -48,6 +48,7 @@
 			<%@ page import="java.util.ArrayList" %>
 			<%@ page import="recurrent_CSCI201L_Project.Item" %>
 			<%ArrayList<Item> items = jdb.getItemsForLender(username);
+			//System.out.println(items.size());
 			if (items == null) {
 			%>
 				You are not renting any items.<br>
