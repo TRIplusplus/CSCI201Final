@@ -8,8 +8,75 @@
 	<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/HomePage.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+     <script src="https://connect.facebook.net/en_US/all.js"></script>
   </head>
-  <body>
+  <body id="login-page">
+  <div id="fb-root"></div>
+<script>
+	window.fbAsyncInit = function() {
+	    FB.init({
+	        appId: '1947752742128149',
+	        status: true,
+	        cookie: true,
+	        xfbml: true,
+	        oauth: true
+	    });
+	};
+	
+	function facebookLogin() {
+	    FB.login(function(response) {
+	        if (response.authResponse) {
+	            console.log('Authenticated!');
+	            	  // Note: The call will only work if you accept the permission request
+	            	 /*  FB.api('/me/feed', 'post', {message: 'Hello, world!'}); */
+	            // location.reload(); //or do whatever you want
+	            FB.api('/me', function(response) 
+	            	    {
+	            	        var username = response.name;
+	            	        var type = "lender"; 
+	            	        var password = response.id; 
+	            	        
+	         				$.ajax({
+	         	 				type: 'POST', 
+	         	 				url: "${pageContext.request.contextPath}/FacebookLoginServlet", 
+	         	 				xhrField: {
+	         	 					withCredential: true
+	         	 				},
+	         	 				data: {
+	         	 					'username': username, 'type': type, 'password': password
+	         	 				}, 
+	         	 				success: function(msg){
+	         	 						var successUrl = "HomePage.jsp";
+	         	 					    window.location.href = successUrl;
+	         	 				},
+	         				}); 
+	            	    });
+	        } else {
+	            console.log('User cancelled login or did not fully authorize.');
+	        }
+	    },
+	    {
+/* 	        scope: 'email,user_checkins' */
+/* 	        scope: 'publish_actions' */
+ 			 'scope':'email'
+ 
+	        
+	    });
+	}
+	
+	(function(d) {
+	    var js,
+	    id = 'facebook-jssdk';
+	    if (d.getElementById(id)) {
+	        return;
+	    }
+	    js = d.createElement('script');
+	    js.id = id;
+	    js.async = true;
+	    js.src = "//connect.facebook.net/en_US/all.js";
+	    d.getElementsByTagName('head')[0].appendChild(js);
+	} (document));
+</script>
     <div class="wrapper">
     	</br>
     	</br>
@@ -26,6 +93,7 @@
 				<input type ="password" name="password"/></br></br>
 				<input type ="submit" name="login" value="LOG IN" /></br></br>
 			</form>
+			<a id='fb-login' href='#' onclick='facebookLogin()'>Login with Facebook</a>
 			</br><div id ="error"></div>
 		</div>
     </div>
@@ -58,7 +126,7 @@
  	 					if (msg.match("There is a missing field. Please input information into all required fields") || msg.match("Username does not exist") || msg.match("Username and password do not match")){
  	 	 					$('#error').text(msg);
  	 					} else {
- 	 						var successUrl = "LenderHomePage.jsp";
+ 	 						var successUrl = "HomePage.jsp";
  	 					    window.location.href = successUrl;
  	 					}
  	 				},
