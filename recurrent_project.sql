@@ -42,4 +42,9 @@ CREATE TABLE messages (
     unread BOOL NOT NULL,
     date DATE NOT NULL,
     Primary Key (id)
+);
+
+CREATE TABLE hashPassword (
+	password1 VARCHAR(100) NOT NULL,
+    password2 VARCHAR(2000) NOT NULL
 )
