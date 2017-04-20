@@ -25,7 +25,7 @@ public class JDBCTest {
 	private static ResultSet rs;
 	String loggedUser;
 	String loggedUserType;
-	
+
 	private String readAll(Reader rd) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		int cp;
@@ -34,7 +34,7 @@ public class JDBCTest {
 		}
 		return sb.toString();
 	}
-	
+
 	public JDBCTest() throws IOException {
 
 		pc = new ParseConfig();
@@ -76,19 +76,19 @@ public class JDBCTest {
 		}
 		return conn;
 	}
-	
+
 	public String getLoggedUser() {
 		return loggedUser;
 	}
-	
+
 	public void setLoggedUser(String username) {
 		this.loggedUser = username;
 	}
-	
+
 	public String getLoggedUserType() {
 		return loggedUserType;
 	}
-	
+
 	public void setLoggedUserType(String userType) {
 		this.loggedUserType = userType;
 	}
@@ -121,11 +121,11 @@ public class JDBCTest {
 			System.out.println(e.getMessage() + "boo");
 		}
 	}
-	
+
 	public void addItem(Item item) {
 		String sql = "INSERT INTO items(lender, renter, title, image, startdate, enddate, description, price, xcoord, ycoord) "
 				+ "VALUES(?,?,?,?,?,?,?,?,?,?)";
-		
+
 		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, item.getLender());
 			pstmt.setString(2, item.getRenter());
@@ -150,7 +150,7 @@ public class JDBCTest {
 		Connection conn = JDBCTest.connect();
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery(sql); // execute the query, and get a
-												// java resultset
+		// java resultset
 
 		// if this ID already exists, we quit
 		if (rs.absolute(1)) {
@@ -169,7 +169,7 @@ public class JDBCTest {
 		Connection conn = JDBCTest.connect();
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery(sql); // execute the query, and get a
-												// java resultset
+		// java resultset
 
 		// if this ID already exists, we quit
 		if (rs.absolute(1)) {
@@ -188,7 +188,7 @@ public class JDBCTest {
 		Connection conn = JDBCTest.connect();
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery(sql); // execute the query, and get a
-												// java resultset
+		// java resultset
 
 		// if this ID already exists, we quit
 		if (rs.absolute(1)) {
@@ -205,7 +205,7 @@ public class JDBCTest {
 		Connection conn = JDBCTest.connect();
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery(sql); // execute the query, and get a
-												// java resultset
+		// java resultset
 
 		// if this ID already exists, we quit
 		if (rs.absolute(1)) {
@@ -214,16 +214,16 @@ public class JDBCTest {
 			return true;
 		}
 	}
-	
+
 	//getters
 	public User getUser(String username, String type) {
 		try {
 			String sql = "SELECT * FROM " + type + "s WHERE username = '" + username + "'";
-	
+
 			Connection conn = JDBCTest.connect();
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
-			
+
 			while (rs.next()) {
 				System.out.println("user found");
 				username = rs.getString(1);
@@ -239,7 +239,7 @@ public class JDBCTest {
 		System.out.println("user not found");
 		return null;
 	}
-	
+
 	public void sendMessage(Message message) {
 		String sql = "INSERT INTO messages(sender, receiver, title, message, unread, date) VALUES(?,?,?,?,?,?)";
 		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -253,9 +253,9 @@ public class JDBCTest {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 	}
-	
+
 	public void readMessage(int ID) {
 		String sql = "UPDATE messages SET unread = '0' WHERE id = " + ID;
 		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -264,7 +264,7 @@ public class JDBCTest {
 			System.out.println(e.getMessage() + "boo");
 		}
 	}
-	
+
 	public void rentItem(int ID, String renter) {
 		String sql = "UPDATE items SET renter = '" + renter + "' WHERE id = " + ID;
 		try (Connection conn = JDBCTest.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -273,17 +273,17 @@ public class JDBCTest {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 	public ArrayList<User> searchUsername(String search) {
 		try {
 			String sql = "SELECT * FROM lenders";
-	
+
 			Connection conn = JDBCTest.connect();
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
-			
+
 			ArrayList<User> users = new ArrayList<User>();
-			
+
 			while (rs.next()) {
 				String username = rs.getString(1);
 				String password = rs.getString(2);
@@ -292,12 +292,12 @@ public class JDBCTest {
 				Lender user = new Lender(username, password, image, email);
 				if (username.toLowerCase().contains((CharSequence) search.toLowerCase())
 						|| search.equalsIgnoreCase("Lenders")) 
-						users.add(user); 
+					users.add(user); 
 			}
-			
+
 			sql = "SELECT * FROM renters";
 			rs = st.executeQuery(sql);
-			
+
 			while (rs.next()) {
 				String username = rs.getString(1);
 				String password = rs.getString(2);
@@ -308,24 +308,24 @@ public class JDBCTest {
 						|| search.equalsIgnoreCase("Renters")) 
 					users.add(user); 
 			}
-			
+
 			return users;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public ArrayList<Message> getMessagesForUser(String username) {
 		try {
 			String sql = "SELECT * FROM messages WHERE receiver = '" + username + "'";
-	
+
 			Connection conn = JDBCTest.connect();
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
-			
+
 			ArrayList<Message> messages = new ArrayList<Message>();
-			
+
 			while (rs.next()) {
 				int id = rs.getInt(1);
 				String sender = rs.getString(2);
@@ -334,22 +334,22 @@ public class JDBCTest {
 				String text = rs.getString(5);
 				boolean read = !(rs.getBoolean(6));
 				Date date = rs.getDate(7);
-				
+
 				Message newMessage = new Message(sender, receiver, title, text);
 				newMessage.setDate(date);
 				if (read) newMessage.markAsRead();
 				newMessage.setID(id);
 				messages.add(newMessage);
 			}
-			
+
 			return messages;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
-	
+
+
 	public int countUnreadMessages(String username) {
 		ArrayList<Message> messages = getMessagesForUser(username);
 		int count = 0;
@@ -360,17 +360,17 @@ public class JDBCTest {
 		}
 		return count;
 	}
-	
+
 	public ArrayList<Item> getItemsForLender(String username) {
 		try {
 			String sql = "SELECT * FROM items WHERE lender = '" + username + "'";
-	
+
 			Connection conn = JDBCTest.connect();
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
-			
+
 			ArrayList<Item> items = new ArrayList<Item>();
-			
+
 			while (rs.next()) {
 				int id = rs.getInt(1);
 				String lender = rs.getString(2);
@@ -383,30 +383,30 @@ public class JDBCTest {
 				Double price = rs.getDouble(9);
 				Double xcoord = rs.getDouble(10);
 				Double ycoord = rs.getDouble(11);
-				
+
 				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
 				item.setID(id);
 				item.setRenter(renter);
 				items.add(item);
 			}
-			
+
 			return items;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public ArrayList<Item> getItemsForRenter(String username) {
 		try {
 			String sql = "SELECT * FROM items WHERE renter = '" + username + "'";
-	
+
 			Connection conn = JDBCTest.connect();
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
-			
+
 			ArrayList<Item> items = new ArrayList<Item>();
-			
+
 			while (rs.next()) {
 				int id = rs.getInt(1);
 				String lender = rs.getString(2);
@@ -419,32 +419,30 @@ public class JDBCTest {
 				Double price = rs.getDouble(9);
 				Double xcoord = rs.getDouble(10);
 				Double ycoord = rs.getDouble(11);
-				
+
 				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
 				item.setID(id);
 				item.setRenter(renter);
 				items.add(item);
 			}
-			
+
 			return items;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public ArrayList<Item> getItemsForSearch(String search) {
-		if (search.equalsIgnoreCase("all")) 
-			return getAllItems();
 		try {
 			String sql = "SELECT * FROM items";
-	
+
 			Connection conn = JDBCTest.connect();
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
-			
+
 			ArrayList<Item> items = new ArrayList<Item>();
-			
+
 			while (rs.next()) {
 				int id = rs.getInt(1);
 				String lender = rs.getString(2);
@@ -457,7 +455,7 @@ public class JDBCTest {
 				Double price = rs.getDouble(9);
 				Double xcoord = rs.getDouble(10);
 				Double ycoord = rs.getDouble(11);
-				
+
 				if (description.toLowerCase().contains((CharSequence)search.toLowerCase()) 
 						|| title.toLowerCase().contains((CharSequence)search.toLowerCase())) {
 					Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
@@ -466,25 +464,25 @@ public class JDBCTest {
 					items.add(item);
 				}
 			}
-			
+
 			return items;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public ArrayList<Item> getItemsNearLocation(double x, double y) {
 		try {
-			int acceptableDistance = 50;
+			int acceptableDistance = 1;
 			String sql = "SELECT * FROM items";
-	
+
 			Connection conn = JDBCTest.connect();
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
-			
+
 			ArrayList<Item> items = new ArrayList<Item>();
-			
+
 			while (rs.next()) {
 				int id = rs.getInt(1);
 				String lender = rs.getString(2);
@@ -497,7 +495,7 @@ public class JDBCTest {
 				Double price = rs.getDouble(9);
 				Double xcoord = rs.getDouble(10);
 				Double ycoord = rs.getDouble(11);
-				
+
 				if (Math.sqrt((xcoord-x)*(xcoord-x) + (ycoord-y)*(ycoord-y)) < acceptableDistance) {
 					Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord);
 					item.setID(id);
@@ -505,24 +503,24 @@ public class JDBCTest {
 					items.add(item);
 				}
 			}
-			
+
 			return items;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public ArrayList<Item> getAllItems() {
 		try {
 			String sql = "SELECT * FROM items";
-	
+
 			Connection conn = JDBCTest.connect();
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
-			
+
 			ArrayList<Item> items = new ArrayList<Item>();
-			
+
 			while (rs.next()) {
 				int id = rs.getInt(1);
 				String lender = rs.getString(2);
@@ -535,26 +533,26 @@ public class JDBCTest {
 				Double price = rs.getDouble(9);
 				Double xcoord = rs.getDouble(10);
 				Double ycoord = rs.getDouble(11);
-				
+
 				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord);
 				item.setID(id);
 				item.setRenter(renter);
 				items.add(item);
-				
+
 			}
-			
+
 			return items;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public ArrayList<Item> getItemsBySearchAndLocation(String search, double x, double y) {
 		ArrayList<Item> searchList = getItemsForSearch(search);
 		ArrayList<Item> locationList = getItemsNearLocation(x, y);
 		ArrayList<Item> intersection = new ArrayList<Item>();
-		
+
 		for (Item item : searchList) {
 			for (Item item2: locationList) {
 				if (item.getID() == item2.getID()) {
@@ -565,7 +563,7 @@ public class JDBCTest {
 		}
 		return intersection;
 	}
-	
+
 	public ArrayList<Item> getItemstoDisplayonMap(){
 
 		try {
@@ -603,7 +601,7 @@ public class JDBCTest {
 
 		return null;
 	}
-	
+
 	public String getLocationJson(String zip){
 		String url = "https://maps.googleapis.com/maps/api/geocode/"
 				+ "json?address="+zip+"&"
@@ -614,19 +612,19 @@ public class JDBCTest {
 			googlemap = new URL(url);
 			BufferedReader in = new BufferedReader(new InputStreamReader(googlemap.openStream()));
 			String inputLine = readAll(in);
-			
+
 			return inputLine;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
-		
+
 	}
 	public String setlng(String json){
 		String lng = null;
 		try {
-			
+
 			JSONObject jo = new JSONObject(json);
 			JSONArray ja = jo.getJSONArray("results");
 			JSONObject jo_geo = (JSONObject) ja.getJSONObject(0).get("geometry");
@@ -642,7 +640,7 @@ public class JDBCTest {
 	public String setlat(String json){
 		String lat = null;
 		try {
-			
+
 			JSONObject jo = new JSONObject(json);
 			JSONArray ja = jo.getJSONArray("results");
 			JSONObject jo_geo = (JSONObject) ja.getJSONObject(0).get("geometry");
@@ -656,38 +654,17 @@ public class JDBCTest {
 		}
 		return lat;
 	}
-	
-	public String json_Geo(){
-		try {
-			ArrayList<Item> items = new ArrayList<Item>();
-			items = this.getItemstoDisplayonMap();
-			
-			JSONArray ja_location = new JSONArray();
-			for(int i=0;i<items.size();i++){
-				JSONObject js_location = new JSONObject();
-				js_location.put("lat", items.get(i).getX());
-				js_location.put("lng", items.get(i).getY());
-				ja_location.put(js_location);
-			}
-			JSONObject start_location = new JSONObject();
-			start_location.put("locations", ja_location);
-		//	System.out.println(start_location.toString());
-			return start_location.toString();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
+
+
+
 	public Item getItemByID(int ID) {
 		try {
 			String sql = "SELECT * FROM items WHERE id = " + ID;
-	
+
 			Connection conn = JDBCTest.connect();
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
-			
+
 			while (rs.next()) {
 				int id = rs.getInt(1);
 				String lender = rs.getString(2);
@@ -700,7 +677,7 @@ public class JDBCTest {
 				Double price = rs.getDouble(9);
 				Double xcoord = rs.getDouble(10);
 				Double ycoord = rs.getDouble(11);
-				
+
 				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
 				item.setRenter(renter);
 				item.setID(id);
@@ -711,16 +688,16 @@ public class JDBCTest {
 		}
 		return null;
 	}
-	
+
 	public Message getMessageByID(int ID) {
 		try {
 			String sql = "SELECT * FROM messages WHERE id = " + ID;
-	
+
 			Connection conn = JDBCTest.connect();
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(sql);
-			
-			
+
+
 			while (rs.next()) {
 				int id = rs.getInt(1);
 				String sender = rs.getString(2);
@@ -729,7 +706,7 @@ public class JDBCTest {
 				String text = rs.getString(5);
 				boolean read = !(rs.getBoolean(6));
 				Date date = rs.getDate(7);
-				
+
 				Message message = new Message(sender, receiver, title, text);
 				message.setDate(date);
 				if (read) message.markAsRead();
@@ -741,4 +718,90 @@ public class JDBCTest {
 		}
 		return null;
 	}
+	//4/20
+	public String json_Geo(String itemName){
+		try {
+			ArrayList<Item> items = new ArrayList<Item>();
+			items = this.getAllItemstoDisplayonMap(itemName);
+			System.out.println(items.size());
+
+			JSONArray ja_location = new JSONArray();
+			for(int i=0;i<items.size();i++){
+				JSONObject js_location = new JSONObject();
+				js_location.put("lat", items.get(i).getX());
+				js_location.put("lng", items.get(i).getY());
+				ja_location.put(js_location);
+			}
+			JSONObject start_location = new JSONObject();
+			start_location.put("locations", ja_location);
+			//	System.out.println(start_location.toString());
+			return start_location.toString();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public ArrayList<Item> getAllItemstoDisplayonMap(String itemName){
+
+		try {
+			System.out.println(itemName);
+			String sql = "SELECT * FROM recurrent.items where title = '"+ itemName+"'";
+			Connection conn = JDBCTest.connect();
+			Statement st;
+			st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			ArrayList<Item> items = new ArrayList<Item>();
+
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String lender = rs.getString(2);
+				String renter = rs.getString(3);
+				String title = rs.getString(4);
+				String image = rs.getString(5);
+				Date startDate = rs.getDate(6);
+				Date endDate = rs.getDate(7);
+				String description = rs.getString(8);
+				Double price = rs.getDouble(9);
+				Double xcoord = rs.getDouble(10);
+				Double ycoord = rs.getDouble(11);
+				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
+
+				item.setID(id);
+				item.setRenter(renter);
+				items.add(item);
+			}
+			return items;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	public String search_item_near_location_json_display(ArrayList<Item> item){
+
+
+		String json = null;
+		try {
+			JSONArray ja = new JSONArray();
+			for(Item i : item){
+				JSONObject jo = new JSONObject();
+				jo.put("lat", i.getX().toString());
+				jo.put("lng", i.getY().toString());
+				ja.put(jo);
+			}
+			JSONObject jo1 = new JSONObject();
+			jo1.put("locations", ja);
+			System.out.println(jo1.toString());
+			return jo1.toString();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 }

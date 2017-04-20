@@ -11,12 +11,12 @@ public class Item {
 	private Date enddate;
 	private String description;
 	private double price;
-	private double xcoord;
-	private double ycoord;
+	private Double xcoord;
+	private Double ycoord;
 	private int id;
 	
 	public Item(String lender, String image, String title, Date startdate, Date enddate, 
-			String description, double price, double xcoord, double ycoord) {
+			String description, double price, Double xcoord, Double ycoord) {
 		this.lender = lender;
 		this.renter = null;
 		this.title = title;
@@ -64,11 +64,11 @@ public class Item {
 		return price;
 	}
 	
-	public double getX() {
+	public Double getX() {
 		return xcoord;
 	}
 	
-	public double getY() {
+	public Double getY() {
 		return ycoord;
 	}
 	
