@@ -434,6 +434,8 @@ public class JDBCTest {
 	}
 	
 	public ArrayList<Item> getItemsForSearch(String search) {
+		if (search.equalsIgnoreCase("all")) 
+			return getAllItems();
 		try {
 			String sql = "SELECT * FROM items";
 	

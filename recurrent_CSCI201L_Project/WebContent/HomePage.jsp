@@ -19,11 +19,11 @@
 		<image style="float:right" title = "View Feed" src="Logo.png"></image>
 		<h4>Rent, Lend, and Connect</h4>
 		<div id = 'buttons'>
-			<form name="inputForm" method="GET" onsubmit="return sendErrorMessage()">
+			<form name="inputForm" method="GET" action="${pageContext.request.contextPath}/DiscoverServlet">
 				<input type ="button" name="login" value="LENDER LOGIN" onclick="location.href='${pageContext.request.contextPath}/LenderLogin.jsp'"/></br></br></br>
 				<input type ="button" name="login" value="RENTER LOGIN" onclick="location.href='${pageContext.request.contextPath}/RenterLogin.jsp'"/></br></br></br>
 				<input type ="button" name="signup" value="SIGN UP" onclick="location.href='${pageContext.request.contextPath}/SignUp.jsp'"/></br></br></br>
-				<input type ="submit" name="discover" value="DISCOVER" />
+				<input type ="submit" name="discover" value="DISCOVER" onclick="location.href='${pageContext.request.contextPath}/DiscoverServlet"/>
 			</form>
 		</div>
     </div>
