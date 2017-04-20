@@ -8,14 +8,11 @@
 	<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/HomePage.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
-    <script src="https://connect.facebook.net/en_US/all.js"></script>
-     <script src="https://connect.facebook.net/en_US/all.js"></script>
+   <script src="https://connect.facebook.net/en_US/all.js"></script>
   </head>
-    <body id="login-page">
   <body id="login-page">
-  <div id="fb-root"></div>
-<script>
+    <div id="fb-root"></div>
+    <script>
 	window.fbAsyncInit = function() {
 	    FB.init({
 	        appId: '1947752742128149',
@@ -36,7 +33,7 @@
 	            FB.api('/me', function(response) 
 	            	    {
 	            	        var username = response.name;
-	            	        var type = "lender"; 
+	            	        var type = $('input:radio[name=usertype]:checked').val();
 	            	        var password = response.id; 
 	            	        
 	         				$.ajax({
@@ -93,14 +90,16 @@
 				Username</br>
 				<input type ="text" name="username"/></br>
 				Password</br>
-				<input type ="password" name="password"/></br></br>
+				<input type ="text" name="password"/></br></br>
 				<input type ="submit" name="login" value="LOG IN" /></br></br>
 			</form>
 			<a id='fb-login' href='#' onclick='facebookLogin()'>Login with Facebook</a>
+			
 			</br><div id ="error"></div>
 		</div>
     </div>
-    <script>
+  </body>
+      <script>
 		function sendErrorMessage() {
 
 			var username = ""; 
@@ -129,7 +128,7 @@
  	 					if (msg.match("There is a missing field. Please input information into all required fields") || msg.match("Username does not exist") || msg.match("Username and password do not match")){
  	 	 					$('#error').text(msg);
  	 					} else {
- 	 						var successUrl = "HomePage.jsp";
+ 	 						var successUrl = "LenderHomePage.jsp";
  	 					    window.location.href = successUrl;
  	 					}
  	 				},
@@ -140,5 +139,4 @@
  			return false;  
 		}
 	</script>
-  </body>
 </html>
