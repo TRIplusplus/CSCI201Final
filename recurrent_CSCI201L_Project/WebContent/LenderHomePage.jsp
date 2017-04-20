@@ -8,16 +8,56 @@
 		<title>Homepage</title>
 	</head>
 	<body>
+	
+		<%@include file="Navbar.jsp" %>
+		<%@include file="Alert.jsp" %>
+		<script type="text/javascript">
+			window.onload = function() {
+				var count = <%=jdb.countUnreadMessages(username)%>;
+				setInterval(function() {
+					count = checkMail(count);
+				}, 5000);
+			}
+			
+			function checkMail(n) {
+				var req = new XMLHttpRequest();
+				var url = 'MailCheckServlet?mail=' + encodeURI(n);
+				req.open("GET", url, true);
+				req.onreadystatechange = function () {
+					if(req.readyState == 4 && req.status == 200) {
+						var object = JSON.parse(req.responseText);
+						console.log(object);
+						if (object.newchange == 'true') {
+							document.getElementById('alert').style.display = 'block';
+							document.getElementById('alert-img').src = object.image;
+							document.getElementById('alert-title').innerHTML = 'NEW MESSAGE--<a href="ItemPage.jsp?id=' + object.id + '">' + object.title + '</a>';
+							document.getElementById('alert-sender').innerHTML = 'From: ' + object.sender;
+							document.getElementById('alert-description').innerHTML = object.description;
+							n++;
+							document.getElementById('message-count').innerHTML = n;
+						}
+					}
+				}
+				req.send(null);
+				return n;
+			};
+			
+			function closeAlert() {
+				document.getElementById('alert').style.display = 'none';
+			}
+		</script>
 		<script type="text/javascript">
 			function displayPopup() {
 				document.getElementById('popup').style.display = 'block';
 			}
-			
+		
 			function closePopup() {
 				document.getElementById('popup').style.display = 'none';
 			}
+			
+			
 		</script>
-		<%@include file="Navbar.jsp" %>
+		
 		<div id="lendnew-container">
 			<button id="lendnew-button" onclick="displayPopup()">+ Lend New Item</button>
 		</div>
@@ -42,7 +82,7 @@
 				<input type="submit" value="Submit">
 			</form>
 		</div>
-		<div id="lent-items" style="text-align: center">
+		<div id="lent-items" style="text-align: center;">
 			<h3>Currently Lending Items:</h3>
 			<div id="lent-items-table" style="text-align: center;">
 			<%@ page import="java.util.ArrayList" %>
@@ -53,7 +93,7 @@
 				You are not renting any items.<br>
 				Click the button above to lend an item.
 			<%} else {%>
-				<table style="border: 0px; width: 60%; margin-left: 17%">
+				<table style="border: 0px; width: 60%; margin-left: 20%">
 					<% for (int i=0; i<items.size(); i+=3) {%>
 						<tr>
 						<%for (int j=i; j<i+3; j++) {

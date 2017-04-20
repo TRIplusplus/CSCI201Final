@@ -21,18 +21,19 @@
 	<a href="Messages.jsp">
 		<div style="height: 75px; border-left: 1px solid black; float: right;">
 			<image class="navbar-item" title="Inbox" src="mail.png" style="margin-top: 5px">
-			<div style="margin-top: -15px;">(<%=jdb.countUnreadMessages(username) %>)</div>
+			<div style="margin-top: -15px;">(<span id="message-count"><%=jdb.countUnreadMessages(username) %></span>)</div>
 		</div>
 	</a>
 	
 	<form name="searchForm" method="GET" action="SearchPage.jsp">
 		<select class="navbar-item" id="navbar-dropdown" name="criteria" style="margin-left: 20px;">
-			<option value="Item">Search criteria</option>
+			<option value="">Search criteria</option>
 			<option value="Item">Item</option>
-			<option value="Username">User</option>
+			<option value="User">User</option>
 		</select>
 		<input class="navbar-item" type="text" name="search" placeholder="Search Term">
-		<input class="navbar-item" type="text" name="location" placeholder="Location">
+		<input class="navbar-item" type="text" name="location" placeholder="ZIP Code">
 		<input class="navbar-item" type="submit" style="width: 100px;"></input>
 	</form>
 </div>
+		

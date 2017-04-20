@@ -1,6 +1,7 @@
 package recurrent_CSCI201L_Project;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -11,7 +12,9 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-//import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class JDBCTest {
 
@@ -22,6 +25,15 @@ public class JDBCTest {
 	private static ResultSet rs;
 	String loggedUser;
 	String loggedUserType;
+	
+	private String readAll(Reader rd) throws IOException {
+		StringBuilder sb = new StringBuilder();
+		int cp;
+		while ((cp = rd.read()) != -1) {
+			sb.append((char) cp);
+		}
+		return sb.toString();
+	}
 	
 	public JDBCTest() throws IOException {
 
@@ -262,6 +274,48 @@ public class JDBCTest {
 		}
 	}
 	
+	public ArrayList<User> searchUsername(String search) {
+		try {
+			String sql = "SELECT * FROM lenders";
+	
+			Connection conn = JDBCTest.connect();
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			
+			ArrayList<User> users = new ArrayList<User>();
+			
+			while (rs.next()) {
+				String username = rs.getString(1);
+				String password = rs.getString(2);
+				String image = rs.getString(3);
+				String email = rs.getString(4);
+				Lender user = new Lender(username, password, image, email);
+				if (username.toLowerCase().contains((CharSequence) search.toLowerCase())
+						|| search.equalsIgnoreCase("Lenders")) 
+						users.add(user); 
+			}
+			
+			sql = "SELECT * FROM renters";
+			rs = st.executeQuery(sql);
+			
+			while (rs.next()) {
+				String username = rs.getString(1);
+				String password = rs.getString(2);
+				String image = rs.getString(3);
+				String email = rs.getString(4);
+				Renter user = new Renter(username, password, image, email);
+				if (username.toLowerCase().contains((CharSequence) search.toLowerCase())
+						|| search.equalsIgnoreCase("Renters")) 
+					users.add(user); 
+			}
+			
+			return users;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public ArrayList<Message> getMessagesForUser(String username) {
 		try {
 			String sql = "SELECT * FROM messages WHERE receiver = '" + username + "'";
@@ -294,6 +348,7 @@ public class JDBCTest {
 		}
 		return null;
 	}
+	
 	
 	public int countUnreadMessages(String username) {
 		ArrayList<Message> messages = getMessagesForUser(username);
@@ -456,6 +511,43 @@ public class JDBCTest {
 		return null;
 	}
 	
+	public ArrayList<Item> getAllItems() {
+		try {
+			String sql = "SELECT * FROM items";
+	
+			Connection conn = JDBCTest.connect();
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			
+			ArrayList<Item> items = new ArrayList<Item>();
+			
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String lender = rs.getString(2);
+				String renter = rs.getString(3);
+				String title = rs.getString(4);
+				String image = rs.getString(5);
+				Date startDate = rs.getDate(6);
+				Date endDate = rs.getDate(7);
+				String description = rs.getString(8);
+				Double price = rs.getDouble(9);
+				Double xcoord = rs.getDouble(10);
+				Double ycoord = rs.getDouble(11);
+				
+				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord);
+				item.setID(id);
+				item.setRenter(renter);
+				items.add(item);
+				
+			}
+			
+			return items;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public ArrayList<Item> getItemsBySearchAndLocation(String search, double x, double y) {
 		ArrayList<Item> searchList = getItemsForSearch(search);
 		ArrayList<Item> locationList = getItemsNearLocation(x, y);
@@ -470,6 +562,120 @@ public class JDBCTest {
 			}
 		}
 		return intersection;
+	}
+	
+	public ArrayList<Item> getItemstoDisplayonMap(){
+
+		try {
+			String sql = "SELECT * FROM items";
+			Connection conn = JDBCTest.connect();
+			Statement st;
+			st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			ArrayList<Item> items = new ArrayList<Item>();
+
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String lender = rs.getString(2);
+				String renter = rs.getString(3);
+				String title = rs.getString(4);
+				String image = rs.getString(5);
+				Date startDate = rs.getDate(6);
+				Date endDate = rs.getDate(7);
+				String description = rs.getString(8);
+				Double price = rs.getDouble(9);
+				Double xcoord = rs.getDouble(10);
+				Double ycoord = rs.getDouble(11);
+				Item item = new Item(lender, image, title, startDate, endDate, description, price, xcoord, ycoord); 
+
+				item.setID(id);
+				item.setRenter(renter);
+				items.add(item);
+			}
+			return items;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	public String getLocationJson(String zip){
+		String url = "https://maps.googleapis.com/maps/api/geocode/"
+				+ "json?address="+zip+"&"
+				+ "key=AIzaSyC-fSJYjRrDlEQTwVphjJc8wzBydKGzt88";
+		//	System.out.println(url);
+		URL googlemap;
+		try {
+			googlemap = new URL(url);
+			BufferedReader in = new BufferedReader(new InputStreamReader(googlemap.openStream()));
+			String inputLine = readAll(in);
+			
+			return inputLine;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	public String setlng(String json){
+		String lng = null;
+		try {
+			
+			JSONObject jo = new JSONObject(json);
+			JSONArray ja = jo.getJSONArray("results");
+			JSONObject jo_geo = (JSONObject) ja.getJSONObject(0).get("geometry");
+			JSONObject jo_loc = (JSONObject) jo_geo.get("location");
+			Double d_lng = jo_loc.getDouble("lng");
+			lng = d_lng.toString();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return lng;
+	}
+	public String setlat(String json){
+		String lat = null;
+		try {
+			
+			JSONObject jo = new JSONObject(json);
+			JSONArray ja = jo.getJSONArray("results");
+			JSONObject jo_geo = (JSONObject) ja.getJSONObject(0).get("geometry");
+			JSONObject jo_loc = (JSONObject) jo_geo.get("location");
+			Double d_lat = jo_loc.getDouble("lat");
+			lat = d_lat.toString();
+			//System.out.println(jo_loc.getDouble("lng"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return lat;
+	}
+	
+	public String json_Geo(){
+		try {
+			ArrayList<Item> items = new ArrayList<Item>();
+			items = this.getItemstoDisplayonMap();
+			
+			JSONArray ja_location = new JSONArray();
+			for(int i=0;i<items.size();i++){
+				JSONObject js_location = new JSONObject();
+				js_location.put("lat", items.get(i).getX());
+				js_location.put("lng", items.get(i).getY());
+				ja_location.put(js_location);
+			}
+			JSONObject start_location = new JSONObject();
+			start_location.put("locations", ja_location);
+		//	System.out.println(start_location.toString());
+			return start_location.toString();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public Item getItemByID(int ID) {

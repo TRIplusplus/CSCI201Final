@@ -9,6 +9,42 @@
 	</head>
 	<body>
 		<%@include file="Navbar.jsp" %>
+		<%@include file="Alert.jsp" %>
+		<script type="text/javascript">
+			window.onload = function() {
+				var count = <%=jdb.countUnreadMessages(username)%>;
+				setInterval(function() {
+					count = checkMail(count);
+				}, 5000);
+			}
+			
+			function checkMail(n) {
+				var req = new XMLHttpRequest();
+				var url = 'MailCheckServlet?mail=' + encodeURI(n);
+				req.open("GET", url, true);
+				req.onreadystatechange = function () {
+					if(req.readyState == 4 && req.status == 200) {
+						var object = JSON.parse(req.responseText);
+						console.log(object);
+						if (object.newchange == 'true') {
+							document.getElementById('alert').style.display = 'block';
+							document.getElementById('alert-img').src = object.image;
+							document.getElementById('alert-title').innerHTML = 'NEW MESSAGE--<a href="ItemPage.jsp?id=' + object.id + '">' + object.title + '</a>';
+							document.getElementById('alert-sender').innerHTML = 'From: ' + object.sender;
+							document.getElementById('alert-description').innerHTML = object.description;
+							n++;
+							document.getElementById('message-count').innerHTML = n;
+						}
+					}
+				}
+				req.send(null);
+				return n;
+			};
+			
+			function closeAlert() {
+				document.getElementById('alert').style.display = 'none';
+			}
+		</script>
 		<div id="lent-items" style="text-align: center">
 			<h2>Search to begin your experience.</h2>
 			<form name="searchForm" method="GET" action="SearchPage.jsp">

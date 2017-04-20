@@ -1,8 +1,8 @@
 package recurrent_CSCI201L_Project;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,16 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class LendNewItemServlet
+ * Servlet implementation class ItemCheckServlet
  */
-@WebServlet("/LendNewItemServlet")
-public class LendNewItemServlet extends HttpServlet {
+@WebServlet("/ItemCheckServlet")
+public class ItemCheckServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LendNewItemServlet() {
+    public ItemCheckServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,21 +31,21 @@ public class LendNewItemServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		JDBCTest jdb = (JDBCTest)request.getSession().getAttribute("jdb");
 		String username = jdb.getLoggedUser();
-		String title = request.getParameter("name");
-		String image = request.getParameter("image");
-		Date startdate = Date.valueOf(request.getParameter("start_date"));
-		Date enddate = Date.valueOf(request.getParameter("end_date"));
-		String description = request.getParameter("description");
-		double price = Double.parseDouble(request.getParameter("price"));
-		String address = request.getParameter("zip");
-		String json = jdb.getLocationJson(address);
-		String lat = jdb.setlat(json);
-		String lng = jdb.setlng(json);
-		System.out.println("adding new item");
-		Item item = new Item(username, image, title, startdate, enddate, description, price,Double.parseDouble(lat), Double.parseDouble(lng));
-		jdb.addItem(item);
-		
-		response.sendRedirect("LenderHomePage.jsp");
+		int num = Integer.valueOf(request.getParameter("count"));
+		ArrayList<Item> items = jdb.getAllItems();
+		int newCount = items.size();
+		System.out.println(num + ", " + newCount);
+		String jsonObject;
+		if (newCount > num) {
+			Item newest = items.get(items.size()-1);
+			jsonObject = "{\"newchange\": \"" + true + "\", \"num\": \"" + newCount + "\", \"title\": \"" + newest.getTitle() + "\", \"image\": \"" + newest.getImage() + "\", \"description\": \"" + newest.getDescription() + "\", \"sender\": \"" + newest.getLender() + "\", \"id\": \"" + newest.getID() + "\"}";
+		} else {
+			jsonObject = "{\"newchange\": \"" + false + "\"}";
+		}
+		response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
+		out.print(jsonObject);
+		out.flush();
 	}
 
 	/**
