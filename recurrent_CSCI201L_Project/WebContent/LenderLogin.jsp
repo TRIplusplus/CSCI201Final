@@ -8,9 +8,12 @@
 	<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/HomePage.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
     <script src="https://connect.facebook.net/en_US/all.js"></script>
+     <script src="https://connect.facebook.net/en_US/all.js"></script>
   </head>
     <body id="login-page">
+  <body id="login-page">
   <div id="fb-root"></div>
 <script>
 	window.fbAsyncInit = function() {
@@ -126,7 +129,7 @@
  	 					if (msg.match("There is a missing field. Please input information into all required fields") || msg.match("Username does not exist") || msg.match("Username and password do not match")){
  	 	 					$('#error').text(msg);
  	 					} else {
- 	 						var successUrl = "LenderHomePage.jsp";
+ 	 						var successUrl = "HomePage.jsp";
  	 					    window.location.href = successUrl;
  	 					}
  	 				},
